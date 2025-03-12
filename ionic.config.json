@@ -1,0 +1,7 @@
+{
+  "name": "Soni_Sync_player",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
