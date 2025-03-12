@@ -1,0 +1,52 @@
+ion-content {
+    --background: url('../../../assets/images/background.jpg') no-repeat center center/cover;
+    ion-card {
+        box-shadow: none;
+        border-radius: 20px;
+        // transform: translate(150%, 80%);
+        // transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(2px);
+        div.lock {
+            font-size: 5rem;
+            ion-icon {
+                color: rgb(2, 33, 38);//#4E0894;
+            }
+        }
+        ion-item {
+            --inner-border-width: 0 0 0px 0;
+            --border-radius: 10px;
+            ion-button{
+                ion-icon{
+                    color: rgb(2, 33, 38);
+                }
+            }
+            ion-input{
+                color: rgb(2, 33, 38);
+            }
+        }
+        ion-input, .fwd {
+            font-size: 0.9rem;
+        }
+        .submit {
+            margin-top: 2rem;
+            ion-button {
+                --background: linear-gradient(to right, rgb(4, 66, 76), rgb(2, 33, 38)); //#B006D0, #4E0894);
+            }
+            ion-text {
+                font-size: 1rem;
+            }
+        }
+        // width: 100%;
+        width: max-content;
+        max-width: 400px;
+        display: block;
+        // align-items: center;
+        // justify-content: center;
+        position: absolute;
+        top: 50%;
+        left: 48%;
+        transform: translate(-50%, -50%);
+        text-align: center; /* Optional, for better layout */
+    }
+}

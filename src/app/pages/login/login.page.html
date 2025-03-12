@@ -1,0 +1,57 @@
+<ion-content  [fullscreen]="true">
+  <ion-card id="login">
+    <form [formGroup]="form">
+
+      <div *ngIf= "!this.loginSucess" class="ion-text-center ion-margin-vertical lock">
+        <ion-icon name="lock-closed"></ion-icon>
+      </div>
+      
+      <div *ngIf= "this.loginSucess" class="ion-text-center ion-margin-vertical lock">
+        <ion-icon name="lock-open"></ion-icon>
+      </div>
+
+      <!-- <ion-item color = "none" class="ion-margin-horizontal ion-margin-top"> -->
+      <ion-item color = "none" class="ion-margin-horizontal ion-margin-top">
+        <ion-button slot="start" fill="clear" color="medium">
+          <ion-icon slot="icon-only" name="mail-outline"></ion-icon>
+        </ion-button>
+        <ion-input fill="outline"
+          type="email"
+          formControlName="email"
+          placeholder="Enter email address"
+          errorText="* Enter proper email address"
+        >
+          <div slot="label">Email<ion-text color="danger">*</ion-text></div>
+        </ion-input>
+      </ion-item>
+
+      <ion-item color = "none" class="ion-margin" lines="none">
+        <ion-button slot="start" fill="clear" color="dark">
+          <ion-icon slot="icon-only" name="key-outline"></ion-icon>
+        </ion-button>
+
+        <ion-input fill="outline"
+          [type]="showPwd ? 'text' : 'password'"
+          placeholder="Enter password"
+          formControlName="password"
+          [errorText]="form.get('password')!.hasError('minlength') ? '* Password must be min. 8 characters long' : '* Enter a proper password'"
+        >
+          <div slot="label">Password <ion-text color="danger">*</ion-text></div>
+        </ion-input>
+        <ion-button slot="end" fill="clear" color="danger" (click)="togglePwd()">
+          <ion-icon slot="icon-only" [name]="showPwd ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+        </ion-button>
+      </ion-item>
+
+      <!-- <div class="ion-text-right ion-margin-horizontal">
+        <ion-text class="fwd" color="light"><strong>Forgot Password?</strong></ion-text>
+      </div> -->
+
+      <div *ngIf="form.get('password')!.valid" class="ion-margin submit" (click)="onSubmit()">
+        <ion-button expand="block" size="large">
+          <ion-text color="dark"><strong>Log In</strong></ion-text>
+        </ion-button>
+      </div>
+    </form>
+  </ion-card>
+</ion-content>

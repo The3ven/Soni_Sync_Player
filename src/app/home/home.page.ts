@@ -1,12 +1,153 @@
-import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
+import { Component, OnInit } from '@angular/core';
+import { IonIcon, IonToolbar, IonTitle, IonContent, IonButton, IonMenu, IonMenuButton, IonButtons, IonAvatar, IonText } from '@ionic/angular/standalone';
+// import { MenuController } from '@ionic/angular';
+import { ApiService } from '../services/api.service';
+import { NgIf, NgFor } from '@angular/common';
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/angular/standalone';
+import { NavController } from '@ionic/angular';
+
+import { addIcons } from 'ionicons';
+import {
+  add,
+  arrowBackOutline,
+  bagHandle,
+  bagHandleOutline,
+  bagHandleSharp,
+  documentLockOutline,
+  documentLockSharp,
+  homeOutline,
+  homeSharp,
+  informationCircleOutline,
+  informationCircleSharp,
+  keyOutline,
+  keySharp,
+  locationOutline,
+  locationSharp,
+  logOutOutline,
+  logOutSharp,
+  personOutline,
+  personSharp,
+  remove,
+  star,
+  ticketOutline,
+  trashOutline,
+  settingsOutline,
+  settingsSharp,
+} from 'ionicons/icons';
+
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [
+    IonButtons,
+    IonMenuButton,
+    IonToolbar,
+    IonContent,
+    IonCard,
+    // IonCardContent,
+    IonCardHeader,
+    // IonCardSubtitle,
+    IonCardTitle,
+    NgIf,
+    NgFor
+  ],
 })
+
+
 export class HomePage {
-  constructor() {}
+
+  isLogin: boolean = true;
+  videoList:{ _id: string; title: string; path: string; size: number }[] = [];
+  getList: boolean = false;
+
+  currentUrl:string = "";
+
+  constructor(private api: ApiService, private navCtrl: NavController) {
+    this.addAllIcons();
+    this.isLogin = true;
+    this.videoList = [];
+    this.getList = false;
+    this.currentUrl = "";
+  }
+
+  addAllIcons() {
+    addIcons({
+      star,
+      bagHandleOutline,
+      bagHandle,
+      bagHandleSharp,
+      trashOutline,
+      add,
+      remove,
+      arrowBackOutline,
+      ticketOutline,
+      locationOutline,
+      homeOutline,
+      homeSharp,
+      informationCircleOutline,
+      informationCircleSharp,
+      documentLockOutline,
+      documentLockSharp,
+      logOutOutline,
+      logOutSharp,
+      personOutline,
+      personSharp,
+      locationSharp,
+      keyOutline,
+      keySharp,
+      settingsOutline,
+      settingsSharp,
+    });
+  }
+
+  navigateToPlayer(video: any)
+  {
+    console.log("video.path : ", video.path);
+    this.navCtrl.navigateForward(['/videoPlayer'],{
+      queryParams: { path:video.path }
+    });
+  }
+
+
+  ngOnInit() {
+    if (this.isLogin) {
+      console.log("User is login we can show him home page");
+      console.log("videolist : ", this.videoList);
+      const endpoint = `getVideoslist`;
+
+      this.api.getData(endpoint).subscribe({
+        next: (data) => {
+          console.log("data : ", data);
+          console.log("len : ", data.length);
+          if (data)
+          {
+            this.getList = true;
+            this.videoList = data.data;
+            console.log(JSON.stringify(data.data));
+          }
+          else
+          {
+            this.getList = false;
+          }
+        },
+        error: (e) => {
+          console.log("error : ", e);
+          
+        },
+        complete: () => {
+          console.info("Request completed")
+        },
+      });
+    }
+    else
+    {
+      console.log("Redirect user to login page");
+    }
+  }
+
+  // fetch all aviliable videos in a list
+
+
 }
