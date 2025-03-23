@@ -6,36 +6,42 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class ApiService {
-  
-  private  baseURL: string = `${environment.serverBaseUrl}:${environment.serverPort}`;
-  
-  constructor(private http : HttpClient)
-  {
+
+  public baseURL: string = environment.serverBaseUrl;
+
+
+
+  constructor(private http: HttpClient) {
     console.log(this.baseURL);
+
+    if (environment.apiServerPort) {
+      this.baseURL = `${this.baseURL}:${environment.apiServerPort}`;
+    }
+
+    console.log(`Final Base URL: ${this.baseURL}`);
   }
 
-   // GET Request
-  getData(endpoint: string): Observable<any>
-  {
+
+  // GET Request
+  getData(endpoint: string): Observable<any> {
     return this.http.get(`${this.baseURL}/${endpoint}`);
   }
 
   // POST Request
-  postData(endpoint: string, payload: any): Observable<any>
-  {
+  postData(endpoint: string, payload: any): Observable<any> {
     return this.http.post(`${this.baseURL}/${endpoint}`, payload);
   }
 
   // PUT Request
-  updateData(endpoint: string, payload: any): Observable<any>
-  {
+  updateData(endpoint: string, payload: any): Observable<any> {
     return this.http.put(`${this.baseURL}/${endpoint}`, payload);
   }
 
   // DELETE Request
-  deleteData(endpoint: string): Observable<any>
-  {
+  deleteData(endpoint: string): Observable<any> {
     return this.http.delete(`${this.baseURL}/${endpoint}`);
   }
 }

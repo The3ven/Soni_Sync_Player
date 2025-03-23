@@ -8,9 +8,9 @@
 
 
 <ion-content>
-  <ng-container *ngIf="this.getList",>
+  <ng-container *ngIf="this.getList">
   <ion-card *ngFor="let video of this.videoList" (click)="this.navigateToPlayer(video)">
-    <img alt="Silhouette of mountains" src="https://ionicframework.com/docs/img/demos/card-media.png" />
+    <img alt="{{video.title}}" src="{{video.img}}" />
     <ion-card-header>
       <ion-card-title>{{video.title}}</ion-card-title>
       <!-- <ion-card-subtitle>Card Subtitle</ion-card-subtitle> -->
@@ -22,6 +22,5 @@
 
   </ion-card>
 </ng-container>
-
   
 </ion-content>

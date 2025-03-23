@@ -5,6 +5,7 @@ import { ApiService } from '../services/api.service';
 import { NgIf, NgFor } from '@angular/common';
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
+import { DataService } from '../services/data.service';
 
 import { addIcons } from 'ionicons';
 import {
@@ -34,37 +35,39 @@ import {
   settingsOutline,
   settingsSharp,
 } from 'ionicons/icons';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
+  standalone: true,
   imports: [
     IonButtons,
     IonMenuButton,
     IonToolbar,
     IonContent,
     IonCard,
-    // IonCardContent,
+    IonCardContent,
     IonCardHeader,
-    // IonCardSubtitle,
+    IonCardSubtitle,
     IonCardTitle,
     NgIf,
-    NgFor
-  ],
+    NgFor,
+],
 })
 
 
 export class HomePage {
 
   isLogin: boolean = true;
-  videoList:{ _id: string; title: string; path: string; size: number }[] = [];
+  videoList:{ _id: string; title: string; path: string; size: number; img: string }[] = [];
   getList: boolean = false;
 
   currentUrl:string = "";
 
-  constructor(private api: ApiService, private navCtrl: NavController) {
+  constructor(private api: ApiService, private navCtrl: NavController,  private dataService: DataService) {
     this.addAllIcons();
     this.isLogin = true;
     this.videoList = [];
@@ -105,9 +108,8 @@ export class HomePage {
   navigateToPlayer(video: any)
   {
     console.log("video.path : ", video.path);
-    this.navCtrl.navigateForward(['/videoPlayer'],{
-      queryParams: { path:video.path }
-    });
+    this.dataService.setData(video.path);
+    this.navCtrl.navigateForward('/videoPlayer');
   }
 
 
@@ -124,8 +126,21 @@ export class HomePage {
           if (data)
           {
             this.getList = true;
-            this.videoList = data.data;
-            console.log(JSON.stringify(data.data));
+            // this.videoList = data.data;
+            data.data.forEach((element: any, idx: number) => {
+              // console.log(element);
+
+              this.videoList[idx] = element;
+              this.videoList[idx].img = `${environment.serverBaseUrl}:${environment.videoServerPort}` + element.img;
+
+              // console.log(element._id)
+              // console.log(element.title
+              // console.log(element.path )
+              // console.log(element.size)
+              // console.log(element.img)
+              // console.log(idx)
+              // console.log(JSON.stringify(data.data));
+            });
           }
           else
           {
@@ -146,8 +161,4 @@ export class HomePage {
       console.log("Redirect user to login page");
     }
   }
-
-  // fetch all aviliable videos in a list
-
-
 }
