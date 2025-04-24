@@ -108,7 +108,7 @@ export class HomePage {
   navigateToPlayer(video: any)
   {
     console.log("video.path : ", video.path);
-    this.dataService.setData(video.path);
+    this.dataService.setData(video);
     this.navCtrl.navigateForward('/videoPlayer');
   }
 

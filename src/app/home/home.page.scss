@@ -1,3 +1,7 @@
 ion-avatar {
   --border-radius: 100px;
 }
+
+ion-header {
+  padding-top: env(safe-area-inset-top);
+}

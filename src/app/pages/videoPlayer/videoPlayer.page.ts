@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
+// import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { VideoPlayerComponent } from '../../components/video-player/video-player.component';
 import { environment } from 'src/environments/environment';
 import { ActivatedRoute } from '@angular/router';
@@ -14,7 +15,7 @@ import { StorageService } from '../../services/storage.service';
   templateUrl: './videoPlayer.page.html',
   styleUrls: ['./videoPlayer.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, VideoPlayerComponent]
+  imports: [IonicModule, CommonModule, FormsModule, VideoPlayerComponent]
 })
 export class VideoPlayerPage implements OnInit {
 
@@ -25,6 +26,7 @@ export class VideoPlayerPage implements OnInit {
   videoPath: string = "";
   getVideo: boolean = false;
   videoOptions: any = {};
+  videoTitle: string = "";
 
 
 
@@ -32,20 +34,47 @@ export class VideoPlayerPage implements OnInit {
     await this.storageService.setItem('lastVideo', video);
   };
 
-  setPlayer = async (video: string) => {
+  setPlayer = async (videoPath: string) => {
 
-    console.log('Video : ', video);
+    console.log('Video : ', videoPath);
     this.getVideo = false;
-    this.videoPath = String(`${environment.serverBaseUrl}:${environment.videoServerPort}${video}`);
+    this.videoPath = String(`${environment.serverBaseUrl}:${environment.videoServerPort}${videoPath}`);
     console.log('this.videoPath :', this.videoPath);
     this.getVideo = true;
 
     this.videoOptions = {
-      fluid: true,
+      // fluid: true,
+      // controls: true,
+      // responsive: true,
+      // autoplay: true,
+      // muted: false,
+      // skipButtons: {forward:10, backward: 10},
+      // preload: "auto",
+      // enableSmoothSeeking: true,
+      // playsinline: true,
+      // children: [
+      // //   // 'bigPlayButton',
+      //   'controlBar'
+      // ],
+      // liveui: true,
+      autoplay: true,
       controls: true,
       responsive: true,
-      autoplay: true,
-      muted: false,
+      fluid: true,
+      preload: 'auto',
+      controlBar: {
+        volumePanel: {
+          inline: false,
+        },
+        children: [
+          'playToggle',
+          'currentTimeDisplay',
+          'progressControl',
+          'durationDisplay',
+          'remainingTimeDisplay',
+          'fullscreenToggle',
+        ]
+      },
       sources: [
         {
           src: this.videoPath,
@@ -55,6 +84,39 @@ export class VideoPlayerPage implements OnInit {
     };
   }
 
+  sanitizeVideoTitle = (title: string): string => {
+    // Normalize weird Unicode characters
+    title = title.replace(/ï½\\u009c/g, '|');
+  
+    // Remove bracketed content like [ID], (Official Video), etc.
+    title = title.replace(/[\[\(].*?[\]\)]/g, '').trim();
+  
+    // Split by common separators
+    const parts = title.split(/[\|｜\-–]+/).map(p => p.trim()).filter(Boolean);
+  
+    // Remove filler keywords from each part
+    const cleanedParts = parts.map(part =>
+      part
+        .replace(/full song audio/gi, '')
+        .replace(/official( video| audio)?/gi, '')
+        .replace(/lyrics?/gi, '')
+        .replace(/feat\.?.*/i, '') // remove featuring artists
+        .trim()
+    ).filter(p => p.length > 0);
+  
+    // If artist - song title format, take second part
+    if (cleanedParts.length >= 2) {
+      return cleanedParts[1];
+    }
+  
+    // Fallback to first clean part
+    return cleanedParts[0] || title;
+  };
+  
+  
+  
+  
+
   async ngOnInit() {
 
     let video = this.dataService.getData();
@@ -63,13 +125,15 @@ export class VideoPlayerPage implements OnInit {
       console.error('No video data from last page');
       video = await this.storageService.getItem('lastVideo');
       console.log('Video : ', video);
-      this.setPlayer(video);
     }
     else {
       await this.saveCurrentSongIndex(video);
-      this.setPlayer(video);
+      this.setPlayer(video.path);
 
     }
+    this.videoTitle = this.sanitizeVideoTitle(video.title);
+    console.log('videoTitle : ', this.videoTitle);
+    this.setPlayer(video.path);
 
   }
 

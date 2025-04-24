@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { StatusBar, Style } from '@capacitor/status-bar';
 import {
   IonApp,
   IonRouterOutlet,
@@ -75,6 +76,16 @@ export class AppComponent {
 
   constructor(private router: Router) {
     this.addAllIcons();
+    // this.initializeApp();
+  }
+
+  async initializeApp() {
+    try {
+      await StatusBar.setOverlaysWebView({ overlay: false }); // Prevents content underlap
+      await StatusBar.setStyle({ style: Style.Dark }); // Optional: set style
+    } catch (error) {
+      console.error('StatusBar plugin not available or error:', error);
+    }
   }
 
   addAllIcons() {

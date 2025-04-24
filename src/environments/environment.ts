@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  serverBaseUrl: "https://localhost",
+  serverBaseUrl: "http://192.168.1.8",
   // serverBaseUrl: "https://gnr7mfj1-9000.inc1.devtunnels.ms/",
   apiServerPort: 9000,
   videoServerPort: 8000,
