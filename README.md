@@ -1,7 +1,7 @@
 
 # 🎬 Soni Sync Player
 
-![Soni Sync Player Banner](./imgs/Soni_Sync_Player.png.png)
+![Soni Sync Player Banner](./imgs/Soni_Sync_Player.png)
 
 **Soni Sync Player** is a beautiful way to feel close, no matter how far. Watch the same videos at the same time with friends and loved ones, syncing hearts across any distance 💖.
 
