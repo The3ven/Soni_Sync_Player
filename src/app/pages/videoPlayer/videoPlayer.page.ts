@@ -38,7 +38,7 @@ export class VideoPlayerPage implements OnInit {
 
     console.log('Video : ', videoPath);
     this.getVideo = false;
-    this.videoPath = String(`${environment.serverBaseUrl}:${environment.videoServerPort}${videoPath}`);
+    this.videoPath = String(`${environment.videoServerBaseUrl}${videoPath}`);
     console.log('this.videoPath :', this.videoPath);
     this.getVideo = true;
 

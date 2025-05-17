@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  serverBaseUrl: "http://192.168.1.8",
-  // serverBaseUrl: "https://gnr7mfj1-9000.inc1.devtunnels.ms/",
+  apiServerBaseUrl: "http://localhost",
+  videoServerBaseUrl: "https://8000-the3ven-hslserver-i9eteo4tngy.ws-us118.gitpod.io",
   apiServerPort: 9000,
   videoServerPort: 8000,
 };

@@ -66,6 +66,8 @@ export class HomePage {
   getList: boolean = false;
 
   currentUrl:string = "";
+  videoServerEndpointUrl:string = `${environment.videoServerBaseUrl}`; //:${environment.videoServerPort}`;
+  apiServerEndpointUrl:string = `${environment.apiServerBaseUrl}:${environment.apiServerPort}`;
 
   constructor(private api: ApiService, private navCtrl: NavController,  private dataService: DataService) {
     this.addAllIcons();
@@ -117,7 +119,7 @@ export class HomePage {
     if (this.isLogin) {
       console.log("User is login we can show him home page");
       console.log("videolist : ", this.videoList);
-      const endpoint = `getVideoslist`;
+      const endpoint = `${this.apiServerEndpointUrl}` + "/getVideoslist";
 
       this.api.getData(endpoint).subscribe({
         next: (data) => {
@@ -131,7 +133,7 @@ export class HomePage {
               // console.log(element);
 
               this.videoList[idx] = element;
-              this.videoList[idx].img = `${environment.serverBaseUrl}:${environment.videoServerPort}` + element.img;
+              this.videoList[idx].img = `${this.videoServerEndpointUrl}` + element.img;
 
               // console.log(element._id)
               // console.log(element.title

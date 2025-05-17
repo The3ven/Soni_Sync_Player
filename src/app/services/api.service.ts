@@ -9,39 +9,27 @@ import { environment } from '../../environments/environment';
 
 
 export class ApiService {
-
-  public baseURL: string = environment.serverBaseUrl;
-
-
-
   constructor(private http: HttpClient) {
-    console.log(this.baseURL);
-
-    if (environment.apiServerPort) {
-      this.baseURL = `${this.baseURL}:${environment.apiServerPort}`;
-    }
-
-    console.log(`Final Base URL: ${this.baseURL}`);
   }
 
 
   // GET Request
-  getData(endpoint: string): Observable<any> {
-    return this.http.get(`${this.baseURL}/${endpoint}`);
+  getData( endpoint: string): Observable<any> {
+    return this.http.get(endpoint);
   }
 
   // POST Request
   postData(endpoint: string, payload: any): Observable<any> {
-    return this.http.post(`${this.baseURL}/${endpoint}`, payload);
+    return this.http.post(endpoint, payload);
   }
 
   // PUT Request
   updateData(endpoint: string, payload: any): Observable<any> {
-    return this.http.put(`${this.baseURL}/${endpoint}`, payload);
+    return this.http.put(endpoint, payload);
   }
 
   // DELETE Request
   deleteData(endpoint: string): Observable<any> {
-    return this.http.delete(`${this.baseURL}/${endpoint}`);
+    return this.http.delete(endpoint);
   }
 }
