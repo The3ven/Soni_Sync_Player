@@ -1,7 +1,198 @@
-<ion-toolbar>
-  <ion-buttons slot="start">
-    <ion-menu-button>
-    </ion-menu-button>
-  </ion-buttons>
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-</ion-toolbar>
+<ion-content class="ion-padding">
+  <h2>Users</h2>
+
+  <ion-list *ngIf="users.length > 0">
+    <ion-item *ngFor="let user of users">
+      <ion-label>
+        <h3>{{ user.name }}</h3>
+        <p>{{ user.email }}</p>
+        <p>{{ user.userId }}</p>
+        <p>{{ user.isAdmin ? 'Admin' : 'User' }}</p>
+        <p>{{ user.isActive ? 'Active' : 'Inactive' }}</p>
+      </ion-label>
+      <ion-button color="danger" fill="solid" (click)="removeUser(user.id)">
+        Remove
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Add New User</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="stacked">Name</ion-label>
+        <ion-input placeholder="Enter Name" [(ngModel)]="newUser.loginName"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-input placeholder="Enter Email" [(ngModel)]="newUser.loginEmail"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Gender</ion-label>
+        <ion-input placeholder="Enter Gender" [(ngModel)]="newUser.gender"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Role</ion-label>
+        <ion-segment [(ngModel)]="newUser.isAdmin">
+          <ion-segment-button value="false">
+            <ion-label>User</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="true">
+            <ion-label>Admin</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-item>
+      
+
+      <ion-item>
+        <ion-label position="stacked">Password</ion-label>
+        <ion-input placeholder="Enter Password" [(ngModel)]="newUser.loginPass" type="password"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">User Name</ion-label>
+        <ion-input placeholder="Enter User Name" [(ngModel)]="newUser.userName"></ion-input>
+      </ion-item>
+
+      <ion-button expand="full" color="primary" (click)="addUser()">Add User</ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Upload Video</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <input type="file" (change)="onFileSelected($event)" accept="video/*" />
+      <ion-button expand="full" color="secondary" (click)="uploadVideo()">Upload Video</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content> -->
+
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Settings</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <h2>Users</h2>
+
+  <ion-list *ngIf="users.length > 0">
+    <ion-item *ngFor="let user of users">
+      <ion-label>
+        <h3>{{ user.name }}</h3>
+        <p>{{ user.email }}</p>
+        <p>{{ user.userId }}</p>
+        <p>{{ user.isAdmin === 'true' ? 'Admin' : 'User' }}</p>
+        <p>{{ user.isActive ? 'Active' : 'Inactive' }}</p>
+      </ion-label>
+      <ion-button color="danger" fill="solid" (click)="removeUser(user.id)">
+        Remove
+      </ion-button>
+      <ion-button color="secondary" fill="solid" (click)="editUser(user)">
+        Edit
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ isEditing ? 'Edit User' : 'Add New User' }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form #userForm="ngForm" (ngSubmit)="isEditing ? updateUser(userForm) : addUser(userForm)">
+        <ion-item>
+          <ion-label position="stacked">Name</ion-label>
+          <ion-input placeholder="Enter Name" [(ngModel)]="newUser.loginName" name="loginName" required></ion-input>
+          <ion-note color="danger" *ngIf="userForm.submitted && !userForm.controls['loginName']?.valid">
+            Name is required
+          </ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Email</ion-label>
+          <ion-input placeholder="Enter Email" [(ngModel)]="newUser.loginEmail" name="loginEmail" type="email" required></ion-input>
+          <ion-note color="danger" *ngIf="userForm.submitted && !userForm.controls['loginEmail']?.valid">
+            Valid email is required
+          </ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Gender</ion-label>
+          <ion-select [(ngModel)]="newUser.gender" name="gender" placeholder="Select Gender" required>
+            <ion-select-option value="male">Male</ion-select-option>
+            <ion-select-option value="female">Female</ion-select-option>
+            <ion-select-option value="other">Other</ion-select-option>
+          </ion-select>
+          <ion-note color="danger" *ngIf="userForm.submitted && !userForm.controls['gender']?.valid">
+            Gender is required
+          </ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Role</ion-label>
+          <ion-segment [(ngModel)]="newUser.isAdmin" name="isAdmin" required>
+            <ion-segment-button value="false">
+              <ion-label>User</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="true">
+              <ion-label>Admin</ion-label>
+            </ion-segment-button>
+          </ion-segment>
+          <ion-note color="danger" *ngIf="userForm.submitted && !userForm.controls['isAdmin']?.valid">
+            Role is required
+          </ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Password</ion-label>
+          <ion-input placeholder="Enter Password" [(ngModel)]="newUser.loginPass" name="loginPass" type="password" required minlength="6"></ion-input>
+          <ion-note color="danger" *ngIf="userForm.submitted && !userForm.controls['loginPass']?.valid">
+            Password must be at least 6 characters
+          </ion-note>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">User Name</ion-label>
+          <ion-input placeholder="Enter User Name" [(ngModel)]="newUser.userName" name="userName" required></ion-input>
+          <ion-note color="danger" *ngIf="userForm.submitted && !userForm.controls['userName']?.valid">
+            User Name is required
+          </ion-note>
+        </ion-item>
+
+        <ion-button expand="full" color="primary" type="submit">
+          {{ isEditing ? 'Update User' : 'Add User' }}
+        </ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Upload Video</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <input type="file" (change)="onFileSelected($event)" accept="video/*" />
+      <ion-button expand="full" color="secondary" (click)="uploadVideo()">Upload Video</ion-button>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

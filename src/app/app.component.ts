@@ -43,6 +43,8 @@ import {
   settingsSharp,
 } from 'ionicons/icons';
 
+import { StorageService } from './services/storage.service';
+
 
 @Component({
   selector: 'app-root',
@@ -59,10 +61,13 @@ import {
     IonMenuToggle,
     IonContent, IonIcon, NgClass],
 })
+
 export class AppComponent {
+
   profile = {
-    name: 'Soni',
-    email: 'soni@gmail.com',
+    name: '',
+    email: '',
+    picture: '',
   };
 
   pages = [
@@ -74,8 +79,30 @@ export class AppComponent {
     { title: 'Sign Out', icon: 'log-out', route: false, active: false, },
   ];
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private storageService: StorageService) {
     this.addAllIcons();
+
+
+    this.storageService.getItem('loginUser').then((user) => {
+      if (user) {
+        this.profile.name = user.userName;
+        this.profile.email = user.email;
+
+        if (user.picture)
+        {
+          this.profile.picture = user.picture;
+        }
+        else
+        {
+          this.profile.picture = 'assets/icon/profile.png';
+        }
+
+        // console.log("User data: ", this.profile);
+      }
+    }
+    ).catch((err) => {
+      console.log("Error while getting user data", err);
+    });
     // this.initializeApp();
   }
 
@@ -133,5 +160,12 @@ export class AppComponent {
     }
   }
 
-  logout() { }
+  logout() { 
+    this.storageService.removeItem('loginUser').then(() => {
+      console.log("User logged out");
+      this.router.navigate(['/login']);
+    }).catch((err) => {
+      console.log("Error while logging out", err);
+    });
+  }
 }

@@ -10,6 +10,8 @@ import { filter } from 'rxjs/internal/operators/filter';
 import { ApiService } from '../../services/api.service'
 
 import { firstValueFrom } from 'rxjs';
+import { StorageService } from 'src/app/services/storage.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -39,10 +41,12 @@ export class LoginPage implements OnInit {
   loginForm!: HTMLElement;
   opacity!: CSSStyleDeclaration;
   loginSucess: boolean = false;
+  userloginData: any = null;
   private activeAlert: HTMLIonAlertElement | null = null;
   private loading: HTMLIonLoadingElement | null = null;
 
-  constructor(private router: Router, private alertController: AlertController, private loadingController: LoadingController, /*, private storageService:StorageService, */ private api: ApiService) {
+  constructor(private router: Router, private alertController: AlertController, private loadingController: LoadingController, private storageService: StorageService, private api: ApiService) {
+  
     this.initForm();
     addIcons({
       keyOutline,
@@ -52,6 +56,7 @@ export class LoginPage implements OnInit {
     if (this.loginForm) {
       this.loginForm.style.opacity = "1";
     }
+  
   }
 
   async showLoader(message: string = "Loading...") {
@@ -119,70 +124,6 @@ export class LoginPage implements OnInit {
     this.showPwd = !this.showPwd;
   }
 
-  // onSubmit = async () => {
-
-  //   if (this.form.invalid) {
-  //     this.form.markAllAsTouched();
-  //     return;
-  //   }
-
-  //   console.log(this.form.value);
-
-  //   // ?userId=Ali&userPass=Ali12345
-
-  //   const endpoint: string = `checkUserLogin?loginEmail=${this.form.value.email}&loginPass=${this.form.value.password}`
-
-
-  //   try {
-  //     const message = "";
-  //     // const {userName, allowed, isAdmin, userId, status, message} = await firstValueFrom(this.api.getData(endpoint));
-
-  //     this.api.getData(endpoint)
-  //       .subscribe({
-  //         next: (data) => console.log(data),
-  //         error: (e) => console.log(e),
-  //         complete: () => console.info("Complete")
-  //       }
-  //       );
-
-  //     const allowed: boolean = false;
-
-  //     // console.log("userName : ", userName);
-  //     // console.log("allowed : ", allowed);
-  //     // console.log("isAdmin : ", isAdmin);
-
-  //     if (allowed) {
-  //       console.log("loginForm : ", this.loginForm);
-  //       this.loginSucess = true;
-  //       if (this.loginForm) {
-  //         const computedStyle = window.getComputedStyle(this.loginForm);
-  //         let opacity = computedStyle.opacity; // Get the current opacity
-  //         console.log('Current Opacity:', opacity); // Log the current opacity
-  //         if (opacity) {
-  //           let op = Number(opacity);
-  //           const decreaseOpacity = () => {
-  //             if (op > 0) {
-  //               op = Math.max(0, op - 0.1); // Decrease opacity but not below 0
-  //               this.loginForm.style.opacity = String(op);
-  //               setTimeout(decreaseOpacity, 40); // Call the function again after 100ms
-  //             }
-  //             else {
-  //               // Navigate to the home page after the fade-out is complete
-  //               this.router.navigate(['/home']);
-  //             }
-  //           };
-  //           decreaseOpacity(); // Start the opacity decrease
-  //         }
-  //       }
-  //     }
-  //     else {
-  //       console.log("Error : ", message);
-  //       await this.alertGenerator("Alert", message, ['OK']);
-  //     }
-  //   } catch (err) {
-  //     console.error("Error:", err);
-  //   }
-  // }
   resetForm() {
     this.showPwd = false;
     this.form.reset();
@@ -198,12 +139,20 @@ export class LoginPage implements OnInit {
 
     console.log(this.form.value);
 
-    const endpoint = `checkUserLogin?loginEmail=${this.form.value.email}&loginPass=${this.form.value.password}`;
+    const endpoint = `${environment.apiServerBaseUrl}/checkUserLogin`;
+
+    const loginData = {
+      loginEmail: this.form.value.email,
+      loginPass: this.form.value.password
+    };
+    console.log("loginData: ", loginData);
+    console.log("endpoint: ", endpoint);
+
 
     // this.alertGenerator("", "", "Please wait", []);
     await this.showLoader("please wait...");
 
-    this.api.getData(endpoint).subscribe({
+    this.api.postData(endpoint, loginData).subscribe({
       next: (data) => {
         this.hideLoader();
         this.handleLoginResponse(data)
@@ -228,15 +177,16 @@ export class LoginPage implements OnInit {
   private handleLoginResponse(data: any): void {
     console.log('API Response:', data);
 
-    const { satatus, allowed, userName, userId, isAdmin, message } = data;
+    const { status, allowed, userName, userId, isAdmin, message, gender } = data;
 
-    console.log("satatus : ", satatus);
+    console.log("status : ", status);
     console.log("userName : ", userName);
     console.log("userId : ", userId);
     console.log("isAdmin : ", isAdmin);
     console.log("message : ", message);
 
     if (allowed) {
+      this.userloginData = data;
       this.loginSuccess();
     } else {
       this.resetForm();
@@ -248,9 +198,23 @@ export class LoginPage implements OnInit {
     console.log("loginForm:", this.loginForm);
     this.loginSucess = true;
 
+    this.storageService.setItem("loginUser", this.userloginData);
+
     if (this.loginForm) {
       this.fadeOutLoginForm(() => {
-        setTimeout(() =>{
+        setTimeout(() => {
+          if (this.userloginData.gender === "male")
+            {
+              console.log(`Welcome Mr. ${this.userloginData.userName}`);
+            }
+            else if (this.userloginData.gender === "female")
+            {
+              console.log(`Welcome miss ${this.userloginData.userName}`);
+            }
+            else
+            {
+              console.log(`Welcome ${this.userloginData.userName}`);
+            }
           this.router.navigate(['/home']);
         }, 20)
       });
@@ -270,7 +234,7 @@ export class LoginPage implements OnInit {
       callback();
       return;
     }
-    
+
     const decreaseOpacity = () => {
       if (opacity > 0) {
         opacity = Math.max(0, opacity - 0.5); // Decrease opacity but not below 0

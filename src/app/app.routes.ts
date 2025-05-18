@@ -1,18 +1,16 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './auth.guard';
 
 export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
-  },
-  {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full',
+    canActivate: [authGuard]
   },
   {
     path: 'login',
-    loadComponent: () => import('./pages/login/login.page').then( m => m.LoginPage)
+    loadComponent: () => import('./pages/login/login.page').then( m => m.LoginPage),
+    canActivate: [authGuard]
   },
   {
     path: 'settings',
@@ -26,4 +24,10 @@ export const routes: Routes = [
     path: 'videoPlayer',
     loadComponent: () => import('./pages/videoPlayer/videoPlayer.page').then( m => m.VideoPlayerPage)
   },
+  {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full',
+  },
+  { path: '**', redirectTo: '/home', pathMatch: 'full' },
 ];

@@ -1,0 +1,16 @@
+ion-segment {
+    margin: 10px 0;
+    --indicator-color: #3880ff;
+    --background: #1e1e1e;
+    --border-radius: 8px;
+    --padding-start: 10px;
+    --padding-end: 10px;
+  }
+  
+  ion-segment-button {
+    --color-checked: #ffffff;
+    --background-checked: #3880ff;
+    --border-radius: 4px;
+    padding: 8px 12px;
+  }
+  
