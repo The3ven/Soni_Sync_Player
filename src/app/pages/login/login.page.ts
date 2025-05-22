@@ -142,8 +142,8 @@ export class LoginPage implements OnInit {
     const endpoint = `${environment.apiServerBaseUrl}/checkUserLogin`;
 
     const loginData = {
-      loginEmail: this.form.value.email,
-      loginPass: this.form.value.password
+      email: this.form.value.email,
+      pass: this.form.value.password
     };
     console.log("loginData: ", loginData);
     console.log("endpoint: ", endpoint);

@@ -14,3 +14,45 @@ ion-segment {
     padding: 8px 12px;
   }
   
+
+
+  .profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    
+    img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .file-name {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+    color: #666;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Adds spacing between the buttons */
+  }
+
+  ion-button {
+    flex: 1; /* Ensures buttons are evenly sized */
+    max-width: 200px; /* Optional: Limits button width */
+  }
+  
+  .profile-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 10px;
+  }

@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { IonHeader, IonTitle, IonToolbar, IonMenuToggle, IonButtons, IonIcon, IonMenuButton } from '@ionic/angular/standalone';
 import { IonicModule } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
-
+import { NavigationEnd, Router } from '@angular/router';
+import {UserService} from "src/app/services/user.service"
 
 import { addIcons } from 'ionicons';
 import {
@@ -33,8 +34,11 @@ import {
   trashOutline,
   settingsOutline,
   settingsSharp,
+  cloudUploadOutline,
+  cloudDoneOutline
 } from 'ionicons/icons';
 import { environment } from 'src/environments/environment';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-settings',
@@ -43,23 +47,74 @@ import { environment } from 'src/environments/environment';
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule],
 })
-export class SettingsPage implements OnInit {
 
+
+export class SettingsPage implements OnInit {
   isEditing = false;
-  editingUserId = null;
+  editingUserId: string | null = null;
   users: any[] = [];
-  newUser = { loginName: '', loginEmail: '', gender: '', isAdmin: false, loginPass: '', loginId: '', userName: '', isActive: false };
+  videoServer = environment.videoServerBaseUrl;
+  apiServer = environment.apiServerBaseUrl;
+  activityLogs: string[] = [];
+  profileImage: string | ArrayBuffer | null = null;
+  profileImageName: string | null = null;
+  ProfileImageFile: File | null = null;
+
+
+
+  newUser = { 
+    userName: '',
+    email: '',
+    gender: '',
+    isAdmin: false,
+    pass: '',
+    userId: '',
+    isActive: true
+  };
 
   selectedFile: File | null = null;
+  selectedFileName: string | null = null;
 
-  constructor(private apiService: ApiService) {
+  Admin =
+    {
+      userName: '',
+      userId: '',
+      email: '',
+      isAdmin: true,
+      profilePicture: '',
+      isActive: false,
+    };
+
+  constructor(
+    private router: Router,
+    private apiService: ApiService,
+    private storageService: StorageService,
+    private userService: UserService,
+  ) {
     this.addAllIcons();
   }
 
+
   ngOnInit() {
-    this.loadUsers();
+    this.getLoginUser().then(() => {
+      console.log("Admin after loaded from storage:", this.Admin);
+      if(!this.Admin.userId) {
+        console.log("No user found in storage, redirecting to login.");
+        this.router.navigate(['/login']);
+      }
+    })
+    .catch((e) => {
+      console.log("error : ", e); 
+    });
+
+    
+    console.log("Admin ? ", this.Admin);
+    if (this.Admin.isAdmin) {
+      this.loadUsers();
+    }
   }
 
+  
 
   addAllIcons() {
     addIcons({
@@ -88,69 +143,173 @@ export class SettingsPage implements OnInit {
       keySharp,
       settingsOutline,
       settingsSharp,
+      cloudUploadOutline,
+      cloudDoneOutline
     });
   }
 
+
+
+
+  async getLoginUser()
+  {
+    const user = await this.storageService.getItem('loginUser');
+    if (user) {
+      this.Admin = { ...user };
+      if (!this.Admin.profilePicture.startsWith("http")) {
+        this.Admin.profilePicture = this.videoServer + "\\" + this.Admin.profilePicture;
+      }
+      console.log("Admin after loaded from storage on setting page :", this.Admin);
+
+    } else {
+      this.router.navigate(['/login']);
+    }
+
+  }
+
   loadUsers() {
-    const endpoint = environment.apiServerBaseUrl + '/getUserlist';
-    console.log('Loading users from:', endpoint);
-    this.apiService.getData(endpoint).subscribe((data: any) => {
-      console.log('Users loaded:', data);
+    this.userService.getUsers().subscribe((data: any) => {
       if (data.status) {
-        data.data.forEach((e: any) => {
-          this.users.push({
-            userId: e.userId,
-            userName: e.userName,
-            name: e.name,
-            email: e.email,
-            isActive: e.isActive,
-            isAdmin: e.isAdmin,
-          });
-        });
+        this.users = data.data;
       }
     });
+
   }
 
 
   addUser(form: any) {
     if (form.valid) {
-    const endpoint = environment.apiServerBaseUrl + '/addUser';
-    console.log('Loading users from:', endpoint);
-    this.newUser.loginId = this.generateShortUserId();
-    this.apiService.postData(endpoint, this.newUser).subscribe((data: any) => {
-      console.log('Users loaded:', data);
-      if (data.status) {
-        this.users.push({
-          userId: this.newUser.loginId,
-          userName: this.newUser.userName,
-          name: this.newUser.userName,
-          email: this.newUser.loginEmail,
-          isActive: this.newUser.isActive,
-          isAdmin: this.newUser.isAdmin,
-        });
-      }
-      this.newUser = { loginName: '', loginEmail: '', gender: '', isAdmin: false, loginPass: '', loginId: '', userName: '', isActive: false };
-      form.resetForm();  // Clear the form after successful submission
-    });
+      this.newUser.userId = this.generateShortUserId();
+      this.userService.addUser(this.newUser).subscribe((data: any) => {
+        if (data.status) {
+          this.users.push({ ...this.newUser });
+          this.logActivity(`Added user: ${this.newUser.userName}`);
+          this.newUser = { userName: '', email: '', gender: '', isAdmin: false, pass: '', userId: '', isActive: false };
+          form.resetForm();
+        }
+      });
+    }
+
   }
-  else
-  {
-    console.log("Form is invalid");
-  }
-  }
+
 
   editUser(user: any) {
     this.isEditing = !this.isEditing;
-    if (this.isEditing)
-    {
+    if (this.isEditing) {
       this.newUser = { ...user };
       this.editingUserId = user.userId;
+
+      console.log("newUser : ", this.newUser);
+
+      this.logActivity(`Edit user: ${user.userName}`);
+
+      console.log("type of isAdmin : ", typeof this.newUser.isAdmin);
+      console.log("type of isActive : ", typeof this.newUser.isActive);
+
+
     }
-    else
-    {
-      this.newUser = { loginName: '', loginEmail: '', gender: '', isAdmin: false, loginPass: '', loginId: '', userName: '', isActive: false };
+    else {
+      this.newUser = { userName: '', email: '', gender: '', isAdmin: false, pass: '', userId: '', isActive: false };
       this.editingUserId = null;
     }
+  }
+
+
+  async updateUser(form: any) {
+    if (form.valid) {
+      this.userService.updateUser(this.newUser).subscribe((res: any) => {
+        if (res.status) {
+          const index = this.users.findIndex((u) => u.userId === this.editingUserId);
+          
+          if (this.ProfileImageFile) {
+            this.uploadProfilePicture(this.ProfileImageFile, this.newUser);
+          }
+
+          if (index !== -1) {
+            this.users[index] = { ...this.newUser };
+          }
+
+          this.logActivity(`Update user: ${this.newUser.userName}`);
+
+          this.isEditing = false;
+          this.editingUserId = null;
+          this.profileImageName = null;
+          form.resetForm();
+        }
+      });
+    }
+
+
+
+  }
+
+
+  removeUser(user: any) {
+    if (user.email === this.Admin.email || user.userName === this.Admin.userName || user.userId === this.Admin.userId) {
+      console.log("You Can`t Delete your Account!");
+      return;
+    }
+
+    if (confirm(`Are you sure you want to delete ${user.userName}?`)) {
+      this.userService.removeUser(user).subscribe((res: any) => {
+        if (res.status) {
+          this.users = this.users.filter((u) => u.userId !== user.userId);
+          this.logActivity(`Removed user: ${user.userName}`);
+        }
+      });
+    }
+
+
+
+  }
+
+  logActivity(action: string): void {
+    const timestamp = new Date().toLocaleString();
+    console.log("timestamp : ", timestamp);
+    this.activityLogs.unshift(`[${timestamp}] ${action}`);
+    console.log("this.activityLogs : ", this.activityLogs);
+  }
+
+  onProfileSelected(event: any) {
+    
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.ProfileImageFile = input.files[0];
+      this.profileImageName = this.ProfileImageFile.name;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.profileImage = reader.result;
+      };
+      reader.readAsDataURL(this.ProfileImageFile);
+      
+      console.log('Selected Profile Image:', this.profileImageName);
+    }
+
+  }
+
+  uploadProfilePicture(file: File, user:any) {
+    this.userService
+      .uploadProfilePicture(file, user.userId, user.email, user.userName)
+      .subscribe((response: any) => {
+        if (response.status) {
+          console.log("response : ", response);
+          console.log("response.profilePicture : ", response.profilePicture);
+          if (user.userId === this.Admin.userId || user.email === this.Admin.email || user.userName === this.Admin.userName) {
+            this.Admin.profilePicture = response.profilePicture;
+            this.storageService.setItem('loginUser', this.Admin);
+          }
+          // user.profilePicture = response.profilePicture;
+          // this.storageService.setItem('loginUser', this.Admin);
+          return true;
+        }
+        else {
+          console.log("We can`t upload profile picture");
+          return false;
+        }
+      });
+
+
   }
 
   generateShortUserId(length: number = 8): string {
@@ -163,43 +322,33 @@ export class SettingsPage implements OnInit {
       .join('');
   }
 
-  onFileSelected(event: any) {
-    this.selectedFile = event.target.files[0];
-  }
 
-  uploadVideo() {
+  uploadVideo(): void {
     if (this.selectedFile) {
-      console.log("Upload this video : ", this.selectedFile);
-      const endpoint = environment.videoServerBaseUrl + '/uploadVideo';
+      console.log('Uploading video:', this.selectedFile.name);
       const formData = new FormData();
       formData.append('video', this.selectedFile, this.selectedFile.name);
-      this.apiService.postData(endpoint, formData).subscribe((data) =>{
-        console.log("Response data from upload server : ", data);
-        if (data.status)
-        {
-          console.log("File Uploaded SUccesfully");
+      // Call your API service to upload the video
+      this.apiService.postData(this.videoServer + "/uploadVideo", formData).subscribe(
+        (response) => {
+          console.log('Video upload response:', response);
+          if (response.status) {
+            console.log('Video uploaded successfully');
+          } else {
+            console.error('Video upload failed');
+          }
         }
-      })
+      );
     }
   }
 
-  updateUser(form: any) {
-    if (form.valid) {
-      const index = this.users.findIndex(u => u.userId === this.editingUserId);
-      if (index !== -1) {
-        this.users[index] = { ...this.newUser };
-        form.resetForm();
-        this.newUser.isAdmin = false;  // Reset isAdmin to 'false'
-        this.isEditing = false;
-        this.editingUserId = null;
-        console.log("User updated:", this.users);
-      }
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+      this.selectedFileName = this.selectedFile.name;
+      console.log('Selected Video File:', this.selectedFileName);
     }
   }
-
-  removeUser(userId: string) {
-    this.users = this.users.filter(user => user.userId !== userId);
-  }
-
 
 }

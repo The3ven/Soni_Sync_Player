@@ -44,6 +44,7 @@ import {
 } from 'ionicons/icons';
 
 import { StorageService } from './services/storage.service';
+import { environment } from 'src/environments/environment';
 
 
 @Component({
@@ -71,11 +72,12 @@ export class AppComponent {
   };
 
   pages = [
-    { title: 'Home', url: '/home', icon: 'home', active: true,
+    {
+      title: 'Home', url: '/home', icon: 'home', active: true,
       route: true,
     },
-    { title: 'Profile', url: '/profile', icon: 'person', active: false, route: true,},
-    { title: 'Settings', url: '/settings', icon: 'settings', active: false, route: true,},
+    { title: 'Profile', url: '/profile', icon: 'person', active: false, route: true, },
+    { title: 'Settings', url: '/settings', icon: 'settings', active: false, route: true, },
     { title: 'Sign Out', icon: 'log-out', route: false, active: false, },
   ];
 
@@ -88,12 +90,11 @@ export class AppComponent {
         this.profile.name = user.userName;
         this.profile.email = user.email;
 
-        if (user.picture)
-        {
-          this.profile.picture = user.picture;
+        if (user.profilePicture) {
+          this.profile.picture = environment.videoServerBaseUrl + "\\" + user.profilePicture;
+          console.log("User picture: ", this.profile.picture);
         }
-        else
-        {
+        else {
           this.profile.picture = 'assets/icon/profile.png';
         }
 
@@ -160,8 +161,9 @@ export class AppComponent {
     }
   }
 
-  logout() { 
+  logout() {
     this.storageService.removeItem('loginUser').then(() => {
+      this.storageService.removeItem('lastVideo');
       console.log("User logged out");
       this.router.navigate(['/login']);
     }).catch((err) => {
