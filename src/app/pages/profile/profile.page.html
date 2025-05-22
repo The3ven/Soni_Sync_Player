@@ -1,26 +1,102 @@
-<ion-toolbar>
-  <ion-buttons slot="start">
-    <ion-menu-button>
-    </ion-menu-button>
-  </ion-buttons>
-</ion-toolbar>
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Profile</ion-title>
+  </ion-toolbar>
+</ion-header>
 
+<ion-content class="ion-padding">
+  <!-- Profile Picture Section -->
+  <div class="profile-container">
+    <img [src]="this.user.profilePicture" alt="Profile Picture" class="profile-picture" />
+    <ion-button expand="block" (click)="fileInput.click()">Change Profile Picture</ion-button>
+    <input type="file" accept="image/*" #fileInput (change)="onProfileSelected($event)" hidden />
+  </div>
 
-<ion-content>
+  <!-- User Information Section -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>User Information</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <!-- Display User Information -->
+      <ion-item>
+        <ion-label position="stacked">Name</ion-label>
+        <ion-text *ngIf="!isEditing">{{ user.userName }}</ion-text>
+        <ion-input
+          *ngIf="isEditing"
+          [(ngModel)]="user.userName"
+          name="userName"
+          required
+          inputmode="text"
+          type="text"
+          class="editable-input">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Email</ion-label>
+        <ion-text *ngIf="!isEditing">{{ user.email }}</ion-text>
+        <ion-input
+          *ngIf="isEditing"
+          [(ngModel)]="user.email"
+          name="email"
+          type="email"
+          required
+          class="editable-input">
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Role</ion-label>
+        <ion-text>{{ user.isAdmin ? 'Admin' : 'User' }}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-label>Status</ion-label>
+        <ion-text>{{ user.isActive ? 'Active' : 'Inactive' }}</ion-text>
+      </ion-item>
 
+      <!-- Buttons -->
+      <div class="button-container">
+        <ion-button expand="block" color="medium" (click)="toggleEditMode()">
+          {{ isEditing ? 'Cancel' : 'Edit Information' }}
+        </ion-button>
+        <ion-button
+          *ngIf="isEditing"
+          expand="block"
+          color="primary"
+          (click)="updateProfile(user)"
+          [disabled]="!user.userName || !user.email">
+          Save Changes
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
 
+  <!-- Change Password Section -->
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Change Password</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form #changePasswordForm="ngForm" (ngSubmit)="changePassword(changePasswordForm)">
+        <ion-item>
+          <ion-label position="stacked">Current Password</ion-label>
+          <ion-input [(ngModel)]="passwords.current" name="currentPassword" type="password" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">New Password</ion-label>
+          <ion-input [(ngModel)]="passwords.new" name="newPassword" type="password" required minlength="6"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="stacked">Confirm New Password</ion-label>
+          <ion-input [(ngModel)]="passwords.confirm" name="confirmPassword" type="password" required></ion-input>
+        </ion-item>
+        <ion-button expand="block" type="submit" [disabled]="!changePasswordForm.valid">Change Password</ion-button>
+      </form>
+    </ion-card-content>
+  </ion-card>
 
-    <!-- User Section -->
-
-  <!-- <ng-container *ngIf="!this.Admin.isAdmin" class="ion-padding"> -->
-    <!-- <div class="profile-container"> -->
-      <!-- <img [src]="profileImage" alt="Profile Picture" *ngIf="profileImage" /> -->
-       <!-- <p>{{ this.Admin.profilePicture }}</p>
-      <img src="{{ this.Admin.profilePicture }}" alt="Default Profile Picture" *ngIf="this.Admin.profilePicture" />
-      <ion-button expand="block" (click)="fileInput.click()">Upload Profile Picture</ion-button>
-      <input type="file" accept="image/*" #fileInput (change)="onProfileSelected($event)" hidden />
-    </div> -->
-
-  <!-- </ng-container> -->
-  
+  <!-- Logout Button -->
+  <ion-button expand="block" color="danger" (click)="logout()">Logout</ion-button>
 </ion-content>

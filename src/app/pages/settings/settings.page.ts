@@ -96,18 +96,8 @@ export class SettingsPage implements OnInit {
 
 
   ngOnInit() {
-    this.getLoginUser().then(() => {
-      console.log("Admin after loaded from storage:", this.Admin);
-      if(!this.Admin.userId) {
-        console.log("No user found in storage, redirecting to login.");
-        this.router.navigate(['/login']);
-      }
-    })
-    .catch((e) => {
-      console.log("error : ", e); 
-    });
+    this.getLoginUser();
 
-    
     console.log("Admin ? ", this.Admin);
     if (this.Admin.isAdmin) {
       this.loadUsers();
@@ -153,18 +143,28 @@ export class SettingsPage implements OnInit {
 
   async getLoginUser()
   {
-    const user = await this.storageService.getItem('loginUser');
-    if (user) {
-      this.Admin = { ...user };
-      if (!this.Admin.profilePicture.startsWith("http")) {
-        this.Admin.profilePicture = this.videoServer + "\\" + this.Admin.profilePicture;
+    this.storageService.getItem('loginUser').then((user) => {
+      if (user) {
+        this.Admin = { ...user };
+        if (user.profilePicture) {
+          if (!this.Admin.profilePicture.startsWith("http")) {
+            this.Admin.profilePicture = environment.videoServerBaseUrl + "\\" + user.profilePicture;
+          }
+          else
+          {
+            this.Admin.profilePicture = user.profilePicture;
+          }
+          console.log("User picture: ", this.Admin.profilePicture);
+        } else {
+          this.Admin.profilePicture = 'assets/icon/profile.png';
+        }
       }
-      console.log("Admin after loaded from storage on setting page :", this.Admin);
-
-    } else {
-      this.router.navigate(['/login']);
-    }
-
+      else {
+        this.router.navigate(['/login']);
+      }
+    }).catch((err) => {
+      console.error('Error loading user profile:', err);
+    });
   }
 
   loadUsers() {
@@ -228,6 +228,16 @@ export class SettingsPage implements OnInit {
           if (index !== -1) {
             this.users[index] = { ...this.newUser };
           }
+
+          // Update Admin data if the updated user is the logged-in admin
+        if (
+          this.newUser.userId === this.Admin.userId ||
+          this.newUser.email === this.Admin.email ||
+          this.newUser.userName === this.Admin.userName
+        ) {
+          this.Admin = { ...this.Admin, ...this.newUser };
+          this.storageService.setItem('loginUser', this.Admin); // Save updated admin data to local storage
+        }
 
           this.logActivity(`Update user: ${this.newUser.userName}`);
 

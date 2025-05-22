@@ -1,18 +1,18 @@
 
 <ion-app>
-  <ion-menu contentId="main-content">
+  <ion-menu contentId="main-content" menuId="mainMenu">
 
     <ion-header class="ion-no-border">
 
       <div class="bg"></div>
-
-      <ion-item lines="none">
+      <ion-menu-toggle autoHide="true">
+      <ion-item lines="none" (click)="navigateToProfile()" button>
         <ion-avatar slot="start">
-          <img src={{this.profile.picture}}>
+          <img [src]=this.profile.profilePicture>
         </ion-avatar>
 
         <ion-label color="light">
-          {{ profile.name }}
+          {{ profile.userName }}
 
           <p>
             <ion-text color="light">
@@ -21,6 +21,7 @@
           </p>
         </ion-label>
       </ion-item>
+      </ion-menu-toggle>
 
     </ion-header>
 

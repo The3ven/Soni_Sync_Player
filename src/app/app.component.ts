@@ -45,7 +45,7 @@ import {
 
 import { StorageService } from './services/storage.service';
 import { environment } from 'src/environments/environment';
-
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-root',
@@ -66,9 +66,10 @@ import { environment } from 'src/environments/environment';
 export class AppComponent {
 
   profile = {
-    name: '',
+    userName: '',
     email: '',
-    picture: '',
+    profilePicture: '',
+    isAdmin: false,
   };
 
   pages = [
@@ -77,34 +78,49 @@ export class AppComponent {
       route: true,
     },
     { title: 'Profile', url: '/profile', icon: 'person', active: false, route: true, },
-    { title: 'Settings', url: '/settings', icon: 'settings', active: false, route: true, },
     { title: 'Sign Out', icon: 'log-out', route: false, active: false, },
   ];
 
-  constructor(private router: Router, private storageService: StorageService) {
+  constructor(
+    private router: Router,
+    private storageService: StorageService,
+    private menuController: MenuController
+    ) {
     this.addAllIcons();
 
-
     this.storageService.getItem('loginUser').then((user) => {
+      console.log("User data: ", user);
+
       if (user) {
-        this.profile.name = user.userName;
-        this.profile.email = user.email;
+        this.profile = { ...user };
 
         if (user.profilePicture) {
-          this.profile.picture = environment.videoServerBaseUrl + "\\" + user.profilePicture;
-          console.log("User picture: ", this.profile.picture);
-        }
-        else {
-          this.profile.picture = 'assets/icon/profile.png';
+          if (!user.profilePicture.startsWith('http')) {
+            this.profile.profilePicture = environment.videoServerBaseUrl + "\\" + user.profilePicture;
+          }
+          else {
+            this.profile.profilePicture = user.profilePicture;
+          }
+          console.log("User picture: ", this.profile.profilePicture);
+        } else {
+          this.profile.profilePicture = 'assets/icon/profile.png';
         }
 
-        // console.log("User data: ", this.profile);
+        // Add the settings page for admin users
+        if (this.profile.isAdmin) {
+          const logout = this.pages.pop();
+          this.pages.push({ title: 'Settings', url: '/settings', icon: 'settings', active: false, route: true });
+          if (logout) {
+            this.pages.push(logout);
+          }
+        }
+
+        console.log("Profile data: ", this.profile);
+        console.log("Pages data: ", this.pages);
       }
-    }
-    ).catch((err) => {
+    }).catch((err) => {
       console.log("Error while getting user data", err);
     });
-    // this.initializeApp();
   }
 
   async initializeApp() {
@@ -159,6 +175,14 @@ export class AppComponent {
     } else {
       this.logout();
     }
+  }
+
+  navigateToProfile() {
+    this.router.navigate(['/profile']);
+  }
+
+  ngOnInit() {
+    console.log("App initialized");
   }
 
   logout() {
