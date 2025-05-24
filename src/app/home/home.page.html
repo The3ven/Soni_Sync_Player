@@ -1,19 +1,82 @@
 <ion-toolbar>
   <ion-buttons slot="start">
-    <ion-menu-button>
-    </ion-menu-button>
+    <ion-menu-button></ion-menu-button>
   </ion-buttons>
+  <ion-title>Video Gallery</ion-title>
+  <ion-buttons slot="end" [class.search-active]="isSearchAreaVisible">
+    <!-- Favorite Icon -->
+    <ion-button (click)="filterFavorites()" aria-label="Toggle favorites">
+      <ion-icon [name]="showFavorites ? 'heart' : 'heart-outline'"></ion-icon>
+    </ion-button>
+
+    <!-- Search Icon -->
+    <ion-button (click)="toggleSearchArea()" aria-label="Toggle search">
+      <ion-icon [name]="isSearchAreaVisible ? 'close' : 'search-outline'"></ion-icon>
+    </ion-button>
+  </ion-buttons>
+
+  <!-- Search Input -->
+  <div class="search-input" [class.active]="isSearchAreaVisible">
+    <ion-searchbar
+      [(ngModel)]="searchQuery"
+      (ionInput)="filterVideos()"
+      placeholder="Search videos..."
+      animated="true"
+    ></ion-searchbar>
+  </div>
 </ion-toolbar>
 
-
 <ion-content>
-  <ng-container *ngIf="this.getList">
-  <ion-card *ngFor="let video of this.videoList" (click)="this.navigateToPlayer(video)">
-    <img alt="{{video.title}}" src="{{video.img}}" />
-    <ion-card-header>
-      <ion-card-title>{{video.title}}</ion-card-title>
-    </ion-card-header>
-  </ion-card>
-</ng-container>
-  
+  <ng-container *ngIf="getList; else loading">
+    <div class="video-list">
+      <ion-card
+        *ngFor="let video of filteredVideos"
+        (click)="navigateToPlayer(video)"
+        class="video-card"
+        [ngStyle]="{ '--dynamic-color': video.themeColor || '#ffffff' }"
+      >
+        <!-- Favorite Icon -->
+        <div class="favorite-icon" (click)="toggleFavorite(video, $event)">
+          <ion-icon
+            [name]="video.isFavorite ? 'heart' : 'heart-outline'"
+            color="danger"
+          ></ion-icon>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div
+          class="card-loading"
+          [class.hidden]="!video.isLoading"
+        >
+          <ion-spinner name="crescent"></ion-spinner>
+        </div>
+
+        <!-- Card Content -->
+        <div class="card-content">
+          <img
+            alt="{{ video.title }}"
+            [src]="video.img"
+            class="video-thumbnail"
+            (load)="onImageLoad(video)"
+            (error)="video.img = 'assets/fallback-image.png'"
+            loading="lazy"
+          />
+          <ion-card-header>
+            <ion-card-title>{{ video.title }}</ion-card-title>
+            <ion-text class="video-duration">{{ formatDuration(video.duration) }}</ion-text>
+          </ion-card-header>
+        </div>
+      </ion-card>
+    </div>
+  </ng-container>
+
+  <!-- Loading Template -->
+  <ng-template #loading>
+    <div class="loading-container">
+      <div class="loading-animation">
+        <ion-spinner name="crescent"></ion-spinner>
+        <p>Loading videos...</p>
+      </div>
+    </div>
+  </ng-template>
 </ion-content>

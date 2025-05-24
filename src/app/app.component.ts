@@ -77,7 +77,7 @@ export class AppComponent {
       title: 'Home', url: '/home', icon: 'home', active: true,
       route: true,
     },
-    { title: 'Profile', url: '/profile', icon: 'person', active: false, route: true, },
+    // { title: 'Profile', url: '/profile', icon: 'person', active: false, route: true, },
     { title: 'Sign Out', icon: 'log-out', route: false, active: false, },
   ];
 
