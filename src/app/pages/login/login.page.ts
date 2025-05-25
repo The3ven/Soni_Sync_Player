@@ -46,7 +46,7 @@ export class LoginPage implements OnInit {
   private loading: HTMLIonLoadingElement | null = null;
 
   constructor(private router: Router, private alertController: AlertController, private loadingController: LoadingController, private storageService: StorageService, private api: ApiService) {
-  
+
     this.initForm();
     addIcons({
       keyOutline,
@@ -56,7 +56,7 @@ export class LoginPage implements OnInit {
     if (this.loginForm) {
       this.loginForm.style.opacity = "1";
     }
-  
+
   }
 
   async showLoader(message: string = "Loading...") {
@@ -74,6 +74,15 @@ export class LoginPage implements OnInit {
     if (this.loading) {
       await this.loading.dismiss();
       this.loading = null;
+    }
+  }
+
+  private checkLoginStatus() {
+    // Replace this with your actual login check logic
+    this.loginSucess = !!localStorage.getItem('loginUser');
+
+    if (!this.loginSucess) {
+      this.router.navigate(['/login']);
     }
   }
 
@@ -203,19 +212,20 @@ export class LoginPage implements OnInit {
     if (this.loginForm) {
       this.fadeOutLoginForm(() => {
         setTimeout(() => {
-          if (this.userloginData.gender === "male")
-            {
-              console.log(`Welcome Mr. ${this.userloginData.userName}`);
-            }
-            else if (this.userloginData.gender === "female")
-            {
-              console.log(`Welcome miss ${this.userloginData.userName}`);
-            }
-            else
-            {
-              console.log(`Welcome ${this.userloginData.userName}`);
-            }
-          this.router.navigate(['/home']);
+          if (this.userloginData.gender === "male") {
+            console.log(`Welcome Mr. ${this.userloginData.userName}`);
+          }
+          else if (this.userloginData.gender === "female") {
+            console.log(`Welcome miss ${this.userloginData.userName}`);
+          }
+          else {
+            console.log(`Welcome ${this.userloginData.userName}`);
+          }
+          // this.router.navigate(['/home']);
+          // Navigate to home and reload the application
+          this.router.navigate(['/home']).then(() => {
+            window.location.reload();
+          });
         }, 20)
       });
     }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { StatusBar, Style } from '@capacitor/status-bar';
 import {
@@ -11,9 +11,14 @@ import {
   IonLabel,
   IonText,
   IonMenuToggle,
-  IonContent, IonIcon
+  IonContent, IonIcon,
+  IonTabButton,
+  IonTabBar,
+  IonTabs,
 } from '@ionic/angular/standalone';
+import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import {
   add,
@@ -51,7 +56,9 @@ import { MenuController } from '@ionic/angular';
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
-  imports: [IonApp,
+  imports: [
+    IonApp,
+    CommonModule,
     IonRouterOutlet,
     IonMenu,
     IonHeader,
@@ -60,10 +67,15 @@ import { MenuController } from '@ionic/angular';
     IonLabel,
     IonText,
     IonMenuToggle,
-    IonContent, IonIcon, NgClass],
+    IonContent,
+    IonIcon,
+    NgClass,
+    IonTabButton,
+    IonTabBar,
+    IonTabs],
 })
 
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   profile = {
     userName: '',
@@ -81,11 +93,13 @@ export class AppComponent {
     { title: 'Sign Out', icon: 'log-out', route: false, active: false, },
   ];
 
+  isLoggedIn = false;
+
   constructor(
     private router: Router,
     private storageService: StorageService,
     private menuController: MenuController
-    ) {
+  ) {
     this.addAllIcons();
 
     this.storageService.getItem('loginUser').then((user) => {
@@ -93,6 +107,8 @@ export class AppComponent {
 
       if (user) {
         this.profile = { ...user };
+
+        this.isLoggedIn = true;
 
         if (user.profilePicture) {
           if (!user.profilePicture.startsWith('http')) {
@@ -117,6 +133,9 @@ export class AppComponent {
 
         console.log("Profile data: ", this.profile);
         console.log("Pages data: ", this.pages);
+      }
+      else {
+        // this.router.navigate(['/login']);
       }
     }).catch((err) => {
       console.log("Error while getting user data", err);
@@ -182,8 +201,32 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    console.log("App initialized");
+    // Check login status
+    
   }
+
+  checkLoginStatus() {
+    // Replace this with your actual login check logic
+    this.storageService.getItem('loginUser').then((user) => {
+      if (user.userName && user.email) {
+        this.isLoggedIn = true;
+        console.log("User is logged in: ", user);
+      }
+      else {
+        this.isLoggedIn = false;
+        console.log("User is not logged in");
+      }
+    });
+
+    console.log("Is user logged in? ", this.isLoggedIn);
+
+    if (!this.isLoggedIn) {
+      this.router.navigate(['/login']);
+    }
+  }
+
+
+  
 
   logout() {
     this.storageService.removeItem('loginUser').then(() => {

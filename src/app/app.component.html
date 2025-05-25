@@ -1,53 +1,21 @@
-
 <ion-app>
-  <ion-menu contentId="main-content" menuId="mainMenu">
-
-    <ion-header class="ion-no-border">
-
-      <div class="bg"></div>
-      <ion-menu-toggle autoHide="true">
-      <ion-item lines="none" (click)="navigateToProfile()" button>
-        <ion-avatar slot="start">
-          <img [src]=this.profile.profilePicture>
-        </ion-avatar>
-
-        <ion-label color="light">
-          {{ profile.userName }}
-
-          <p>
-            <ion-text color="light">
-              {{ profile.email }}
-            </ion-text>
-          </p>
-        </ion-label>
-      </ion-item>
-      </ion-menu-toggle>
-
-    </ion-header>
-
-    <ion-content>
-
-      @for(page of pages; track $index) {
-        <ion-menu-toggle class="menu-items" [autoHide]="false">
-          <ion-item 
-            lines="none"
-            class="ion-padding-start ion-margin-top"
-            [ngClass]="{ 'selected': page?.active }"
-            (click)="onItemTap(page)"
-            >
-            <ion-icon 
-              slot="start"
-              [ios]="page.icon + '-outline'"
-              [md]="page.icon + '-sharp'">
-            </ion-icon>
-  
-            <ion-label>{{ page.title }}</ion-label>
-          </ion-item>
-        </ion-menu-toggle>
-      }
-
-    </ion-content>
-
-  </ion-menu>
-  <ion-router-outlet id="main-content"></ion-router-outlet>
+  <ion-tabs *ngIf="isLoggedIn">
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="home">
+        <ion-icon name="home-outline" class="home-icon"></ion-icon>
+        <ion-label>Home</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="settings">
+        <ion-icon name="settings-outline" class="settings-icon"></ion-icon>
+        <ion-label>Settings</ion-label>
+      </ion-tab-button>
+      <ion-tab-button tab="profile">
+        <img [src]="profile.profilePicture" 
+             alt="Profile Picture"
+             class="profile-picture" />
+        <ion-label>Profile</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+  <ion-router-outlet *ngIf="!isLoggedIn"></ion-router-outlet>
 </ion-app>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IonToolbar, IonContent, IonMenuButton, IonButtons } from '@ionic/angular/standalone';
 // import { MenuController } from '@ionic/angular';
-import { ApiService } from '../services/api.service';
+import { ApiService } from '../../services/api.service';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { CommonModule } from '@angular/common';
@@ -15,7 +15,7 @@ import {
     IonButton,
   IonIcon, } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
-import { DataService } from '../services/data.service';
+import { DataService } from '../../services/data.service';
 
 import { addIcons } from 'ionicons';
 import {
@@ -51,7 +51,7 @@ import {
 
 } from 'ionicons/icons';
 import { environment } from 'src/environments/environment';
-import { StorageService } from '../services/storage.service';
+import { StorageService } from '../../services/storage.service';
 
 
 @Component({

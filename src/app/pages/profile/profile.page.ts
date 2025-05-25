@@ -184,7 +184,10 @@ export class ProfilePage implements OnInit {
 
   logout() {
     this.storageService.removeItem('loginUser');
-    this.router.navigate(['/login']);
+    this.storageService.removeItem('lastVideo');
+    this.router.navigate(['/login']).then(() => {
+      window.location.reload();
+    });
   }
 
   toggleEditMode() {
