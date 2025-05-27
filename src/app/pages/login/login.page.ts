@@ -223,7 +223,7 @@ export class LoginPage implements OnInit {
           }
           // this.router.navigate(['/home']);
           // Navigate to home and reload the application
-          this.router.navigate(['/home']).then(() => {
+          this.router.navigate(['/tabs']).then(() => {
             window.location.reload();
           });
         }, 20)

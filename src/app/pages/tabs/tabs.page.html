@@ -1,0 +1,18 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="home">
+      <ion-icon name="home-outline" class="home-icon"></ion-icon>
+      <ion-label>Home</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="settings">
+      <ion-icon name="settings-outline" class="settings-icon"></ion-icon>
+      <ion-label>Settings</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="profile">
+      <img [src]="profile?.profilePicture || 'assets/default-avatar.png'" 
+           alt="Profile Picture" 
+           class="profile-picture" />
+      <ion-label>Profile</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
