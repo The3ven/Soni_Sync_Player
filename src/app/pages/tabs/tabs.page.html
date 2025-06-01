@@ -1,6 +1,6 @@
 Users\Ali\Documents\GitHub\CupiPlayer\src\app\pages\tabs\tabs.page.html
 <ion-tabs>
-  <ion-tab-bar slot="bottom">
+  <ion-tab-bar slot="bottom" *ngIf="!tabBarHidden">
     <ion-tab-button tab="videos">
       <ion-icon name="home-outline"></ion-icon>
       <ion-label>Home</ion-label>

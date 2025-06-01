@@ -4,21 +4,9 @@ import { StatusBar, Style } from '@capacitor/status-bar';
 import {
   IonApp,
   IonRouterOutlet,
-  IonMenu,
-  IonHeader,
-  IonItem,
-  IonAvatar,
-  IonLabel,
-  IonText,
-  IonMenuToggle,
-  IonContent, IonIcon,
-  IonTabButton,
-  IonTabBar,
-  IonTabs,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router } from '@angular/router';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import {
   add,
@@ -59,20 +47,7 @@ import { MenuController } from '@ionic/angular';
   imports: [
     IonApp,
     CommonModule,
-    IonRouterOutlet,
-    IonMenu,
-    IonHeader,
-    IonItem,
-    IonAvatar,
-    IonLabel,
-    IonText,
-    IonMenuToggle,
-    IonContent,
-    IonIcon,
-    NgClass,
-    IonTabButton,
-    IonTabBar,
-    IonTabs],
+    IonRouterOutlet],
 })
 
 export class AppComponent implements OnInit {
@@ -202,7 +177,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     // Check login status
-    
+
   }
 
   checkLoginStatus() {
@@ -226,7 +201,7 @@ export class AppComponent implements OnInit {
   }
 
 
-  
+
 
   logout() {
     this.storageService.removeItem('loginUser').then(() => {

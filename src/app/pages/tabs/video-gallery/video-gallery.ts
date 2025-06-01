@@ -138,6 +138,8 @@ export class videoGalleryPage implements OnInit {
     console.log("video.path : ", video.path);
     this.dataService.setData(video);
     this.router.navigate(['/tabs/videoPlayer']);
+    // this.router.navigate(['/tabs/videoPlayer'], { queryParams: { video: JSON.stringify(video) } });
+
   }
 
 

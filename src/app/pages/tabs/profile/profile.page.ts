@@ -8,9 +8,7 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonMenuToggle,
   IonButtons,
-  IonIcon,
   IonMenuButton,
   IonButton,
   IonLabel,
@@ -20,7 +18,6 @@ import {
   IonCard,
   IonCardTitle,
   IonText,
-  IonNote,
   IonInput,
 } from '@ionic/angular/standalone';
 import { environment } from 'src/environments/environment';
@@ -49,7 +46,6 @@ import { UserService } from 'src/app/services/user/user.service';
     IonTitle,
     IonCardTitle,
     IonText,
-    IonNote,
     IonInput
   ],
 
