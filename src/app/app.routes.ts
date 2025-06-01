@@ -1,7 +1,7 @@
+import { Routes } from '@angular/router';
+import { AuthService } from './services/auth/auth.service';
 import { inject } from '@angular/core';
-import {Route, Routes } from '@angular/router';
-import { AuthService } from './services/auth.service';
-
+// import auth service
 export const routes: Routes = [
   {
     path: '',
@@ -11,10 +11,15 @@ export const routes: Routes = [
   {
     path: 'tabs',
     loadChildren: () => import('./pages/tabs/tabs.routes').then(m => m.routes),
-    canMatch: [async (route: Route) => await inject(AuthService).authGuard(route)]
+    canActivate: [async () => await inject(AuthService).authGuard()]
+
   },
   {
     path: 'login',
-    loadComponent: () => import('./pages/login/login.page').then(m => m.LoginPage)
+    loadComponent: () => import('./pages/login/login.page').then( m => m.LoginPage)
+  },
+  {
+    path: 'signup',
+    loadComponent: () => import('./pages/login/signup/signup.page').then( m => m.SignupPage)
   }
 ];

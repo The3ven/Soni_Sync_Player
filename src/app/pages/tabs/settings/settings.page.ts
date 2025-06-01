@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonHeader, IonTitle, IonToolbar, IonMenuToggle, IonButtons, IonIcon, IonMenuButton } from '@ionic/angular/standalone';
 import { IonicModule } from '@ionic/angular';
-import { ApiService } from 'src/app/services/api.service';
+import { ApiService } from '../../../services/api/api.service';
 import { NavigationEnd, Router } from '@angular/router';
-import {UserService} from "src/app/services/user.service"
+import {UserService} from "src/app/services/user/user.service"
 
 import { addIcons } from 'ionicons';
 import {
@@ -38,7 +38,7 @@ import {
   cloudDoneOutline
 } from 'ionicons/icons';
 import { environment } from 'src/environments/environment';
-import { StorageService } from 'src/app/services/storage.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
   selector: 'app-settings',

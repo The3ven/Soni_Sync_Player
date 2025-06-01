@@ -7,10 +7,10 @@ import { IonicModule, AlertController, LoadingController } from '@ionic/angular'
 import { keyOutline, mailOutline, eyeOutline, eyeOffOutline, lockClosed, lockOpen } from 'ionicons/icons'
 import { addIcons } from 'ionicons';
 import { filter } from 'rxjs/internal/operators/filter';
-import { ApiService } from '../../services/api.service'
+import { ApiService } from '../../services/api/api.service'
 
 import { firstValueFrom } from 'rxjs';
-import { StorageService } from 'src/app/services/storage.service';
+import { StorageService } from 'src/app/services/storage/storage.service';
 import { environment } from 'src/environments/environment';
 
 @Component({

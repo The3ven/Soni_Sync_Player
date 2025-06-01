@@ -7,22 +7,31 @@ export const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: 'home',
-        loadComponent: () => import('../home/home.page').then(m => m.HomePage)
-      },
-      {
-        path: 'settings',
-        loadComponent: () => import('../settings/settings.page').then(m => m.SettingsPage)
+        path: 'videos',
+        loadComponent: () => import('./video-gallery/video-gallery').then(m => m.videoGalleryPage)
       },
       {
         path: 'profile',
-        loadComponent: () => import('../profile/profile.page').then(m => m.ProfilePage)
+        loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage)
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./settings/settings.page').then(m => m.SettingsPage)
+      },
+      {
+        path: 'videoPlayer',
+        loadComponent: () => import('./videoPlayer/videoPlayer.page').then(m => m.VideoPlayerPage)
       },
       {
         path: '',
-        redirectTo: '/tabs/home',
+        redirectTo: '/tabs/videos',
         pathMatch: 'full'
       }
     ]
+  },
+  {
+    path: '',
+    redirectTo: '/tabs/videos',
+    pathMatch: 'full'
   }
 ];

@@ -1,21 +1,15 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { StorageService } from './storage.service';
+import { StorageService } from '../storage/storage.service';
 import { Route, Router } from '@angular/router';
-import { GlobalService } from './global.service';
-
-interface User {
-  userName: string;
-  isActive: boolean;
-  gender?: 'male' | 'female' | string;
-}
-
+import { GlobalService } from '../../services/global/global.service';
+import { User } from '../../models/user.model'; // Adjust the import path as necessary
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private isAuthenticated = new BehaviorSubject<boolean>(false);
-  private currentUser = new BehaviorSubject<User | null>(null);
+  private isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private currentUser: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
 
   constructor(
     private storageService: StorageService,
@@ -28,13 +22,24 @@ export class AuthService {
   // Check if user is logged in on app start
   private async checkAuthStatus(): Promise<void> {
     try {
-      const user = await this.storageService.getItem('loginUser');
-      if (user) {
-        this.isAuthenticated.next(true);
+      const rawUser = await this.storageService.getItem('loginUser');;
+      if (rawUser && rawUser.userName && rawUser.userId) {
+        const user = new User(
+          rawUser.userName,
+          rawUser.userId,
+          rawUser.isAdmin,
+          rawUser.email,
+          rawUser.gender,
+          rawUser.isActive,
+          rawUser.profilePicture
+        );
         this.currentUser.next(user);
+        this.isAuthenticated.next(true);
       }
     } catch (error) {
-      await this.global.errorToast('Failed to check auth status');
+      console.error('Error checking authentication status:', error);
+      this.isAuthenticated.next(false);
+      this.currentUser.next(null);
     }
   }
 
@@ -51,11 +56,11 @@ export class AuthService {
   // Login method
   async login(userData: User): Promise<boolean> {
     try {
-      await this.global.showLoader('Logging in...');
-      await this.storageService.setItem('loginUser', userData);
+      this.global.showLoader('Logging in...');
+      this.storageService.setItem('loginUser', userData);
       this.isAuthenticated.next(true);
       this.currentUser.next(userData);
-      await this.global.hideLoader();
+      this.global.hideLoader();
       await this.global.successToast('Login successful');
       return true;
     } catch (error) {
@@ -65,14 +70,10 @@ export class AuthService {
     }
   }
 
-  async authGuard(route: Route): Promise<boolean> {
+  async authGuard(): Promise<boolean> {
     try {
       const user = await this.storageService.getItem('loginUser');
       if (user) {
-        if (!user?.isActive) {
-          await this.logout();
-          return false;
-        }
         return true; // User is logged in and active
       } else {
         await this.navigate('/login');

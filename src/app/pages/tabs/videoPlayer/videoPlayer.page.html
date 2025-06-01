@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="handleBack()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      {{ videoTitle }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" *ngIf="getVideo">
+  <!-- Embedded video player directly in the page -->
+  <video
+    #target
+    id="videPlayer"
+    class="video-js vjs-default-skin"
+    playsinline
+  ></video>
+</ion-content>

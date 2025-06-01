@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { IonToolbar, IonContent, IonMenuButton, IonButtons } from '@ionic/angular/standalone';
 // import { MenuController } from '@ionic/angular';
-import { ApiService } from '../../services/api.service';
+import { ApiService } from '../../../services/api/api.service';
 import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { 
   IonCard,
    IonCardHeader,
@@ -15,7 +16,7 @@ import {
     IonButton,
   IonIcon, } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
-import { DataService } from '../../services/data.service';
+import { DataService } from '../../../services/data/data.service';
 
 import { addIcons } from 'ionicons';
 import {
@@ -51,13 +52,12 @@ import {
 
 } from 'ionicons/icons';
 import { environment } from 'src/environments/environment';
-import { StorageService } from '../../services/storage.service';
-
+import { StorageService } from '../../../services/storage/storage.service';
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  templateUrl: './video-gallery.html',
+  styleUrls: ['./video-gallery.scss'],
   standalone: true,
   imports: [
     IonButtons,
@@ -80,7 +80,7 @@ import { StorageService } from '../../services/storage.service';
     IonButton,
   ],
 })
-export class HomePage implements OnInit {
+export class videoGalleryPage implements OnInit {
   showFavorites: boolean = false; // Track whether to show only favorites
   videoList: any[] = []; // Full list of videos
   filteredVideos: any[] = []; // Videos displayed based on filters
@@ -93,7 +93,7 @@ export class HomePage implements OnInit {
   videoServerEndpointUrl: string = `${environment.videoServerBaseUrl}`; //:${environment.videoServerPort}`;
   apiServerEndpointUrl: string = `${environment.apiServerBaseUrl}`; // :${environment.apiServerPort}`;
 
-  constructor(private api: ApiService, private navCtrl: NavController, private dataService: DataService, private storageService: StorageService) {
+  constructor(private router: Router, private api: ApiService, private navCtrl: NavController, private dataService: DataService, private storageService: StorageService) {
     this.addAllIcons();
     this.videoList = [];
     this.getList = false;
@@ -137,7 +137,7 @@ export class HomePage implements OnInit {
   navigateToPlayer(video: any) {
     console.log("video.path : ", video.path);
     this.dataService.setData(video);
-    this.navCtrl.navigateForward('/videoPlayer');
+    this.router.navigate(['/tabs/videoPlayer']);
   }
 
 

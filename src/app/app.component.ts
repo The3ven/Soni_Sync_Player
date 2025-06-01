@@ -48,7 +48,7 @@ import {
   settingsSharp,
 } from 'ionicons/icons';
 
-import { StorageService } from './services/storage.service';
+import { StorageService } from './services/storage/storage.service';
 import { environment } from 'src/environments/environment';
 import { MenuController } from '@ionic/angular';
 
