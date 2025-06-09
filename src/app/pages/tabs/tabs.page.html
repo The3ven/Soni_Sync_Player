@@ -1,4 +1,3 @@
-Users\Ali\Documents\GitHub\CupiPlayer\src\app\pages\tabs\tabs.page.html
 <ion-tabs>
   <ion-tab-bar slot="bottom" *ngIf="!tabBarHidden">
     <ion-tab-button tab="videos">
@@ -6,14 +5,18 @@ Users\Ali\Documents\GitHub\CupiPlayer\src\app\pages\tabs\tabs.page.html
       <ion-label>Home</ion-label>
     </ion-tab-button>
 
+
+
+    <ion-tab-button tab="adminDashboard" *ngIf="user.isAdmin">
+      <ion-icon name="settings-outline"></ion-icon>
+      <ion-label>Admin Panel</ion-label>
+    </ion-tab-button>
+
     <ion-tab-button tab="profile">
-      <ion-icon name="person-outline"></ion-icon>
+      <!-- <ion-icon name="person-outline"></ion-icon> -->
+      <img [src]="user.profilePicture" alt="Profile" style="width: 24px; height: 24px; border-radius: 50%;" />
       <ion-label>Profile</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="settings">
-      <ion-icon name="settings-outline"></ion-icon>
-      <ion-label>Settings</ion-label>
-    </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>

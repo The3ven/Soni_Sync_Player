@@ -6,15 +6,16 @@ import { NgIf, NgFor } from '@angular/common';
 import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { 
+import {
   IonCard,
-   IonCardHeader,
-    IonCardTitle,
-      IonTitle,IonText,
-    IonSearchbar,
-    IonSpinner,
-    IonButton,
-  IonIcon, } from '@ionic/angular/standalone';
+  IonCardHeader,
+  IonCardTitle,
+  IonTitle, IonText,
+  IonSearchbar,
+  IonSpinner,
+  IonButton,
+  IonIcon,
+} from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
 import { DataService } from '../../../services/data/data.service';
 
@@ -83,13 +84,14 @@ import { StorageService } from '../../../services/storage/storage.service';
 export class videoGalleryPage implements OnInit {
   showFavorites: boolean = false; // Track whether to show only favorites
   videoList: any[] = []; // Full list of videos
+  fevVideo: string[] = []; // Initialize as an empty array // Full list of fevorite videos
   filteredVideos: any[] = []; // Videos displayed based on filters
-  
+
   isSearchAreaVisible: boolean = false; // Track search bar visibility
   searchQuery: string = ''; // For search functionality
   getList = false;
   currentUrl: string = "";
-  
+
   videoServerEndpointUrl: string = `${environment.videoServerBaseUrl}`; //:${environment.videoServerPort}`;
   apiServerEndpointUrl: string = `${environment.apiServerBaseUrl}`; // :${environment.apiServerPort}`;
 
@@ -98,6 +100,13 @@ export class videoGalleryPage implements OnInit {
     this.videoList = [];
     this.getList = false;
     this.currentUrl = "";
+    this.storageService.getItem("fevItems").then((fevItems: any[]) => {
+      this.fevVideo = fevItems || []; // Initialize with stored favorites or empty array
+      console.log("Stored favorite items:", this.fevVideo);
+    }).catch((error) => {
+      console.error("Error retrieving favorite items:", error);
+      this.fevVideo = [];
+    });
   }
 
   addAllIcons() {
@@ -156,6 +165,9 @@ export class videoGalleryPage implements OnInit {
                 isLoading: true, // Initialize isLoading to true
               };
 
+              // check if this video is in favorites
+              this.videoList[idx].isFavorite = this.fevVideo.includes(this.videoList[idx]._id);
+
               // Extract dominant color
               this.extractThemeColor(this.videoList[idx].img).then((color) => {
                 this.videoList[idx].themeColor = color;
@@ -194,6 +206,19 @@ export class videoGalleryPage implements OnInit {
   toggleFavorite(video: any, event: Event) {
     event.stopPropagation(); // Prevent triggering card click
     video.isFavorite = !video.isFavorite; // Toggle favorite status
+
+    console.log("Toggling favorite for video:", video._id, "isFavorite:", video.isFavorite);
+
+    const isAlreadyFavorite = this.fevVideo.includes(video._id);
+
+    if (!isAlreadyFavorite) {
+      this.fevVideo.push(video._id); // Add to favorites
+    } else {
+      this.fevVideo = this.fevVideo.filter(fav => fav !== video._id); // Remove
+    }
+
+    // Save to storage
+    this.storageService.setItem("fevItems", this.fevVideo);
   }
 
   filterFavorites() {

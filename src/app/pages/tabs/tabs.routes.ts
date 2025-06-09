@@ -15,8 +15,8 @@ export const routes: Routes = [
         loadComponent: () => import('./profile/profile.page').then(m => m.ProfilePage)
       },
       {
-        path: 'settings',
-        loadComponent: () => import('./settings/settings.page').then(m => m.SettingsPage)
+        path: 'adminDashboard',
+        loadComponent: () => import('./admin-dashboard/admin-dashboard').then(m => m.AdminDeshboardPage)
       },
       {
         path: 'videoPlayer',

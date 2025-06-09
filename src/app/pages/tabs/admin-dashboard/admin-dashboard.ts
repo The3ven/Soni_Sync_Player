@@ -41,15 +41,15 @@ import { environment } from 'src/environments/environment';
 import { StorageService } from 'src/app/services/storage/storage.service';
 
 @Component({
-  selector: 'app-settings',
-  templateUrl: './settings.page.html',
-  styleUrls: ['./settings.page.scss'],
+  selector: 'admin-dashboard',
+  templateUrl: './admin-dashboard.html',
+  styleUrls: ['./admin-dashboard.scss'],
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule],
 })
 
 
-export class SettingsPage implements OnInit {
+export class AdminDeshboardPage implements OnInit {
   isEditing = false;
   editingUserId: string | null = null;
   users: any[] = [];
