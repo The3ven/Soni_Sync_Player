@@ -12,6 +12,7 @@ import { ApiService } from '../../services/api/api.service'
 import { firstValueFrom } from 'rxjs';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { environment } from 'src/environments/environment';
+import { Strings } from 'src/app/enum/strings';
 
 @Component({
   selector: 'app-login',
@@ -77,14 +78,14 @@ export class LoginPage implements OnInit {
     }
   }
 
-  private checkLoginStatus() {
-    // Replace this with your actual login check logic
-    this.loginSucess = !!localStorage.getItem('loginUser');
+  // private checkLoginStatus() {
+  //   // Replace this with your actual login check logic
+  //   this.loginSucess = !!localStorage.getItem(Strings.USER_STORAGE);
 
-    if (!this.loginSucess) {
-      this.router.navigate(['/login']);
-    }
-  }
+  //   if (!this.loginSucess) {
+  //     this.router.navigate(['/login']);
+  //   }
+  // }
 
 
   // Function to manually dismiss the alert
@@ -207,7 +208,7 @@ export class LoginPage implements OnInit {
     console.log("loginForm:", this.loginForm);
     this.loginSucess = true;
 
-    this.storageService.setItem("loginUser", this.userloginData);
+    this.storageService.setItem(Strings.USER_STORAGE, this.userloginData);
 
     if (this.loginForm) {
       this.fadeOutLoginForm(() => {

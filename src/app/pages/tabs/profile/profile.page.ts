@@ -22,6 +22,7 @@ import {
 } from '@ionic/angular/standalone';
 import { environment } from 'src/environments/environment';
 import { UserService } from 'src/app/services/user/user.service';
+import { Strings } from 'src/app/enum/strings';
 
 @Component({
   selector: 'app-profile',
@@ -74,7 +75,7 @@ export class ProfilePage implements OnInit {
   }
 
   loadUserProfile() {
-    this.storageService.getItem('loginUser').then((user) => {
+    this.storageService.getItem(Strings.USER_STORAGE).then((user) => {
       if (user) {
         this.user = { ...user };
         if (user.profilePicture) {
@@ -127,7 +128,7 @@ export class ProfilePage implements OnInit {
 
           user = { ...user, profilePicture: response.profilePicture };
 
-          this.storageService.setItem('loginUser', user);
+          this.storageService.setItem(Strings.USER_STORAGE, user);
           // user.profilePicture = response.profilePicture;
           // this.storageService.setItem('loginUser', this.Admin);
           return true;
@@ -147,7 +148,7 @@ export class ProfilePage implements OnInit {
     this.userService.updateUser(user).subscribe((res: any) => {
       if (res.status) {
         console.log("User updated successfully");
-        this.storageService.setItem('loginUser', user);
+        this.storageService.setItem(Strings.USER_STORAGE, user);
         this.isEditing = false; // Exit edit mode after saving
       }
       else {
@@ -179,8 +180,10 @@ export class ProfilePage implements OnInit {
   }
 
   logout() {
-    this.storageService.removeItem('loginUser');
-    this.storageService.removeItem('lastVideo');
+    this.storageService.removeItem(Strings.USER_STORAGE);
+    this.storageService.removeItem(Strings.LAST_PLAYED_VIDEO);
+    this.storageService.removeItem(Strings.LIKE_VIDEOS);
+    console.log('User logged out');
     this.router.navigate(['/login']).then(() => {
       window.location.reload();
     });

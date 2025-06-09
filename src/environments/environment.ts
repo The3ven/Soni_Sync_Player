@@ -10,6 +10,7 @@ export const environment = {
   // apiServerBaseUrl: "https://9000-the3ven-hslserver-i9eteo4tngy.ws-us118.gitpod.io",
   apiServerPort: 9000,
   videoServerPort: 8000,
+  CHAT_SERVER: "http://localhost:3000"
 };
 
 /*

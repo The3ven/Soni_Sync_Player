@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { StorageService } from 'src/app/services/storage/storage.service';
 import { environment } from 'src/environments/environment';
 import { User } from 'src/app/models/user.model';
+import { Strings } from 'src/app/enum/strings';
 
 @Component({
   selector: 'app-tabs',
@@ -32,7 +33,7 @@ export class TabsPage {
     this.loadUserProfile();
   }
   loadUserProfile() {
-    this.storageService.getItem('loginUser').then((user) => {
+    this.storageService.getItem(Strings.USER_STORAGE).then((user) => {
       if (user) {
         this.user = { ...user };
         if (user.profilePicture) {

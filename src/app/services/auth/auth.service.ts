@@ -4,6 +4,7 @@ import { StorageService } from '../storage/storage.service';
 import { Route, Router } from '@angular/router';
 import { GlobalService } from '../../services/global/global.service';
 import { User } from '../../models/user.model'; // Adjust the import path as necessary
+import { Strings } from 'src/app/enum/strings';
 @Injectable({
   providedIn: 'root'
 })
@@ -22,7 +23,7 @@ export class AuthService {
   // Check if user is logged in on app start
   private async checkAuthStatus(): Promise<void> {
     try {
-      const rawUser = await this.storageService.getItem('loginUser');;
+      const rawUser = await this.storageService.getItem(Strings.USER_STORAGE);;
       if (rawUser && rawUser.userName && rawUser.userId) {
         const user = new User(
           rawUser.userName,
@@ -57,7 +58,7 @@ export class AuthService {
   async login(userData: User): Promise<boolean> {
     try {
       this.global.showLoader('Logging in...');
-      this.storageService.setItem('loginUser', userData);
+      this.storageService.setItem(Strings.USER_STORAGE, userData);
       this.isAuthenticated.next(true);
       this.currentUser.next(userData);
       this.global.hideLoader();
@@ -72,7 +73,7 @@ export class AuthService {
 
   async authGuard(): Promise<boolean> {
     try {
-      const user = await this.storageService.getItem('loginUser');
+      const user = await this.storageService.getItem(Strings.USER_STORAGE);
       if (user) {
         return true; // User is logged in and active
       } else {
@@ -118,7 +119,7 @@ export class AuthService {
   async logout(): Promise<void> {
     try {
       await this.global.showLoader('Logging out...');
-      await this.storageService.removeItem('loginUser');
+      await this.storageService.removeItem(Strings.USER_STORAGE);
       this.isAuthenticated.next(false);
       this.currentUser.next(null);
       await this.global.hideLoader();
@@ -132,7 +133,7 @@ export class AuthService {
   // Verify if user is authenticated
   async verifyAuth(): Promise<boolean> {
     try {
-      const user = await this.storageService.getItem('loginUser');
+      const user = await this.storageService.getItem(Strings.USER_STORAGE);
       return !!user;
     } catch (error) {
       await this.global.errorToast('Authentication verification failed');

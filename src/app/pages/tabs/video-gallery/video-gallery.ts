@@ -54,9 +54,10 @@ import {
 } from 'ionicons/icons';
 import { environment } from 'src/environments/environment';
 import { StorageService } from '../../../services/storage/storage.service';
+import { Strings } from 'src/app/enum/strings';
 
 @Component({
-  selector: 'app-home',
+  selector: 'video-gallery',
   templateUrl: './video-gallery.html',
   styleUrls: ['./video-gallery.scss'],
   standalone: true,
@@ -100,7 +101,7 @@ export class videoGalleryPage implements OnInit {
     this.videoList = [];
     this.getList = false;
     this.currentUrl = "";
-    this.storageService.getItem("fevItems").then((fevItems: any[]) => {
+    this.storageService.getItem(Strings.LIKE_VIDEOS).then((fevItems: any[]) => {
       this.fevVideo = fevItems || []; // Initialize with stored favorites or empty array
       console.log("Stored favorite items:", this.fevVideo);
     }).catch((error) => {
@@ -218,7 +219,7 @@ export class videoGalleryPage implements OnInit {
     }
 
     // Save to storage
-    this.storageService.setItem("fevItems", this.fevVideo);
+    this.storageService.setItem(Strings.LIKE_VIDEOS, this.fevVideo);
   }
 
   filterFavorites() {

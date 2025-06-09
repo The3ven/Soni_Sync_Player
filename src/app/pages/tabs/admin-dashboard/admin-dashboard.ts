@@ -39,6 +39,7 @@ import {
 } from 'ionicons/icons';
 import { environment } from 'src/environments/environment';
 import { StorageService } from 'src/app/services/storage/storage.service';
+import { Strings } from 'src/app/enum/strings';
 
 @Component({
   selector: 'admin-dashboard',
@@ -143,7 +144,7 @@ export class AdminDeshboardPage implements OnInit {
 
   async getLoginUser()
   {
-    this.storageService.getItem('loginUser').then((user) => {
+    this.storageService.getItem(Strings.USER_STORAGE).then((user) => {
       if (user) {
         this.Admin = { ...user };
         if (user.profilePicture) {
@@ -236,7 +237,7 @@ export class AdminDeshboardPage implements OnInit {
           this.newUser.userName === this.Admin.userName
         ) {
           this.Admin = { ...this.Admin, ...this.newUser };
-          this.storageService.setItem('loginUser', this.Admin); // Save updated admin data to local storage
+          this.storageService.setItem(Strings.USER_STORAGE, this.Admin); // Save updated admin data to local storage
         }
 
           this.logActivity(`Update user: ${this.newUser.userName}`);
@@ -307,7 +308,7 @@ export class AdminDeshboardPage implements OnInit {
           console.log("response.profilePicture : ", response.profilePicture);
           if (user.userId === this.Admin.userId || user.email === this.Admin.email || user.userName === this.Admin.userName) {
             this.Admin.profilePicture = response.profilePicture;
-            this.storageService.setItem('loginUser', this.Admin);
+            this.storageService.setItem(Strings.USER_STORAGE, this.Admin);
           }
           // user.profilePicture = response.profilePicture;
           // this.storageService.setItem('loginUser', this.Admin);

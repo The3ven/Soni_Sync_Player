@@ -1,3 +1,26 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="handleBack()">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      {{ videoTitle }}
+    </ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<!-- <ion-content [fullscreen]="true" *ngIf="getVideo">
+  <video
+    #target
+    id="videPlayer"
+    class="video-js vjs-default-skin"
+    playsinline
+  ></video>
+</ion-content> -->
+
+
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -11,12 +34,33 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" *ngIf="getVideo">
-  <!-- Embedded video player directly in the page -->
-  <video
-    #target
-    id="videPlayer"
-    class="video-js vjs-default-skin"
-    playsinline
-  ></video>
+<ion-content [fullscreen]="true" class="chat-content">
+  <!-- Embedded video player -->
+  <div *ngIf="getVideo">
+    <video
+      #target
+      id="videPlayer"
+      class="video-js vjs-default-skin"
+      playsinline
+    ></video>
+  </div>
+
+  <!-- Chat Messages -->
+  <div *ngFor="let msg of messages" class="message-row" [ngClass]="{ 'own': msg.sender === currentUser }">
+    <div class="message-bubble">
+      <div class="message-text">{{ msg.text }}</div>
+      <div class="message-meta">{{ msg.time }}</div>
+    </div>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-item lines="none">
+      <ion-input [(ngModel)]="newMessage" placeholder="Type a message..." clearInput></ion-input>
+      <ion-button fill="clear" (click)="sendMessage()">
+        <ion-icon name="send"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-toolbar>
+</ion-footer>
