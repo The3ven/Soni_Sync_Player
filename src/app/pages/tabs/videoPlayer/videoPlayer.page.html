@@ -34,23 +34,41 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="chat-content">
-  <!-- Embedded video player -->
-  <div *ngIf="getVideo">
+<ion-content
+  [fullscreen]="true"
+  (ionScroll)="onScroll($event)"
+  scrollEvents="true"
+  class="chat-content"
+>
+
+  <!-- 📺 Floating Video Player Wrapper -->
+  <div class="video-wrapper" [class.floating]="isFloating">
     <video
       #target
       id="videPlayer"
       class="video-js vjs-default-skin"
       playsinline
+      controls
     ></video>
+
+    <!-- ❌ Close Floating Player Button -->
+    <ion-button fill="clear" class="close-btn" (click)="closeFloatingPlayer()" *ngIf="isFloating">
+      <ion-icon name="close"></ion-icon>
+    </ion-button>
   </div>
 
-  <!-- Chat Messages -->
-  <div *ngFor="let msg of messages" class="message-row" [ngClass]="{ 'own': msg.sender === currentUser }">
-    <div class="message-bubble">
-      <div class="message-text">{{ msg.text }}</div>
-      <div class="message-meta">{{ msg.time }}</div>
+
+  <!-- 💬 Chat Messages -->
+  <div #chatContainer class="chat-messages">
+    <div *ngFor="let msg of messages" class="message-row" [ngClass]="{ 'own': msg.sender === currentUser }">
+      <div class="message-bubble">
+        <div class="message-text">{{ msg.text }}</div>
+        <div class="message-meta">{{ msg.time }}</div>
+      </div>
     </div>
+
+    <!-- 🔽 Scroll Anchor -->
+    <div #scrollAnchor></div>
   </div>
 </ion-content>
 

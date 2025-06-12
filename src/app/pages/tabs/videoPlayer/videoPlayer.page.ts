@@ -9,6 +9,7 @@ import { StorageService } from '../../../services/storage/storage.service';
 import { IonIcon, IonContent, IonHeader, IonTitle, IonToolbar, IonLabel, IonItem, IonButton, IonCard, IonInput, IonText, IonApp } from '@ionic/angular/standalone';
 import { sendOutline } from 'ionicons/icons'
 import { ChatSocketService } from '../../../services/socket/socket.service'
+import { HostListener } from '@angular/core';
 
 import videojs from 'video.js';
 import Player from "video.js/dist/types/player";
@@ -16,7 +17,7 @@ import 'video.js/dist/video-js.css';
 import 'videojs-mobile-ui/dist/videojs-mobile-ui.css';
 import 'videojs-mobile-ui';
 import { addIcons } from 'ionicons';
-import { arrowBack } from 'ionicons/icons';
+import { arrowBack, close } from 'ionicons/icons';
 
 import { Router } from '@angular/router';
 import { Strings } from 'src/app/enum/strings';
@@ -32,8 +33,10 @@ import { Subscription } from 'rxjs';
 })
 export class VideoPlayerPage implements AfterViewChecked {
   @ViewChild('target', { static: false }) target!: ElementRef;
+  // @ViewChild('chatContainer') private chatContainer!: ElementRef;
+  @ViewChild('scrollAnchor') private scrollAnchor!: ElementRef;
 
-
+  isFloating = false;
   player!: Player;
   videoPath: string = '';
   getVideo: boolean = false;
@@ -58,7 +61,8 @@ export class VideoPlayerPage implements AfterViewChecked {
   ) {
     addIcons({
       'arrow-back': arrowBack,
-      'send': sendOutline
+      'send': sendOutline,
+      'close':close,
     });
 
 
@@ -77,8 +81,7 @@ export class VideoPlayerPage implements AfterViewChecked {
 
       this.subs.push(
         this.chatSocket.onHistory().subscribe(data => {
-          data.forEach((m:any) => {
-
+          data.forEach((m: any) => {
             this.messages.push(m);
             console.log('History:', m);
           });
@@ -99,6 +102,18 @@ export class VideoPlayerPage implements AfterViewChecked {
 
 
   }
+  // @HostListener('window:scroll', [])
+  onScroll(event: any): void {
+    const scrollTop = event.detail.scrollTop; // pixel threshold to trigger floating
+    console.log('Scroll Top:', scrollTop); // ✅ DEBUG LOG
+    this.isFloating = scrollTop > 200;
+  }
+
+  closeFloatingPlayer() {
+    this.isFloating = false;
+    // Optionally pause or hide video
+  }
+
 
   async ngOnInit() {
     let video = this.dataService.getData();
@@ -126,6 +141,14 @@ export class VideoPlayerPage implements AfterViewChecked {
     setTimeout(() => {
       this.initPlayer();
     }, 100); // Delay to ensure video tag is rendered
+  }
+
+  private scrollToLastMessage(): void {
+    try {
+      this.scrollAnchor.nativeElement.scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      console.error('Scroll error:', err);
+    }
   }
 
   ngAfterViewChecked() {
@@ -253,6 +276,7 @@ export class VideoPlayerPage implements AfterViewChecked {
       });
       this.newMessage = '';
     }
+    this.scrollToLastMessage();
   }
 
   ngOnDestroy() {
