@@ -40,23 +40,38 @@
   scrollEvents="true"
   class="chat-content"
 >
-
+<div *ngIf="floatingModeEnabled">
   <!-- 📺 Floating Video Player Wrapper -->
   <div class="video-wrapper" [class.floating]="isFloating">
     <video
-      #target
-      id="videPlayer"
-      class="video-js vjs-default-skin"
-      playsinline
-      controls
+    #target
+    id="videPlayer"
+    class="video-js vjs-default-skin"
+    playsinline
+    controls
     ></video>
-
+    
     <!-- ❌ Close Floating Player Button -->
     <ion-button fill="clear" class="close-btn" (click)="closeFloatingPlayer()" *ngIf="isFloating">
       <ion-icon name="close"></ion-icon>
     </ion-button>
   </div>
+</div>
 
+<div class="video-wrapper fixed" *ngIf="!floatingModeEnabled">
+<video
+    #target
+    id="videPlayer"
+    class="video-js vjs-default-skin"
+    playsinline
+    controls
+    ></video>
+</div>
+
+  <!-- 🔔 New Messages Badge -->
+  <div class="new-messages-badge" *ngIf="newMessageCount > 0" (click)="scrollToLastMessage()">
+    {{ newMessageCount }}
+  </div>
 
   <!-- 💬 Chat Messages -->
   <div #chatContainer class="chat-messages">

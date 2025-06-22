@@ -50,6 +50,7 @@ import {
   searchOutline,
   heartOutline,
   trash,
+  close,
 
 } from 'ionicons/icons';
 import { environment } from 'src/environments/environment';
@@ -141,6 +142,7 @@ export class videoGalleryPage implements OnInit {
       heartOutline,
       heart,
       trash,
+      close,
     });
   }
 

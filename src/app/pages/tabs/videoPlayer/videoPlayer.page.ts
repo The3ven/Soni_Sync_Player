@@ -45,10 +45,13 @@ export class VideoPlayerPage implements AfterViewChecked {
   currentUser = '';
   newMessage = '';
   messages: Message[] = [];
+  floatingModeEnabled = false;
+  newMessageCount = 0;
 
   private playerInitialized = false;
   private subs: Subscription[] = [];
   messageText = '';
+  isAtBottom = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -92,6 +95,7 @@ export class VideoPlayerPage implements AfterViewChecked {
         this.chatSocket.onMessage().subscribe(msg => {
           console.log('Message:', msg);
           this.messages.push(msg);
+          this.newMessageCount++;
           console.log(msg);
         })
       );
@@ -102,11 +106,33 @@ export class VideoPlayerPage implements AfterViewChecked {
 
 
   }
+
+
   // @HostListener('window:scroll', [])
-  onScroll(event: any): void {
-    const scrollTop = event.detail.scrollTop; // pixel threshold to trigger floating
-    console.log('Scroll Top:', scrollTop); // ✅ DEBUG LOG
+  // onScroll(event: any): void {
+  //   const scrollTop = event.detail.scrollTop; // pixel threshold to trigger floating
+  //   console.log('Scroll Top:', scrollTop); // ✅ DEBUG LOG
+  //   this.isFloating = scrollTop > 200;
+  // }
+
+
+   onScroll(event: CustomEvent) {
+    const scrollElement = event.target as HTMLElement;
+    const scrollTop = scrollElement.scrollTop;
+    const scrollHeight = scrollElement.scrollHeight;
+    const clientHeight = scrollElement.clientHeight;
+
+    // Check if user is at the bottom (with small threshold)
+    this.isAtBottom = scrollHeight - scrollTop - clientHeight < 100;
+
+    console.log("scrollHeight : ", scrollHeight)
+    console.log("scrollTop : ", scrollTop)
+    console.log("clientHeight : ", clientHeight)
+    console.log("scrollHeight - scrollTop - clientHeight : ", scrollHeight - scrollTop - clientHeight)
     this.isFloating = scrollTop > 200;
+    if (this.isAtBottom) {
+      this.newMessageCount = 0; // Reset count when at bottom
+    }
   }
 
   closeFloatingPlayer() {
@@ -143,9 +169,10 @@ export class VideoPlayerPage implements AfterViewChecked {
     }, 100); // Delay to ensure video tag is rendered
   }
 
-  private scrollToLastMessage(): void {
+  scrollToLastMessage(): void {
     try {
       this.scrollAnchor.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      this.newMessageCount = 0;
     } catch (err) {
       console.error('Scroll error:', err);
     }

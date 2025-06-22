@@ -22,6 +22,14 @@ video {
   border-radius: 8px;
 }
 
+.video-wrapper.fixed {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  background-color: var(--ion-background-color, #121212);
+}
+
 .message-row {
   display: flex;
   margin: 8px 0;
@@ -94,3 +102,29 @@ video {
   }
 }
 
+.new-messages-badge {
+  position: fixed;
+  bottom: 70px; /* Above the footer */
+  right: 20px;
+  background-color: var(--ion-color-primary, #3880ff);
+  color: white;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.chat-messages {
+  padding-bottom: 20px; /* Ensure last message isn’t hidden by badge or footer */
+}
+
+.new-messages-badge {
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
