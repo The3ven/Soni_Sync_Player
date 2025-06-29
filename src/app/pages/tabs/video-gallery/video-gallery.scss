@@ -11,7 +11,7 @@ ion-toolbar {
   --color: #ffffff; /* White text color */
 }
 
-.video-list {
+.video-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -21,11 +21,11 @@ ion-toolbar {
   transition: margin-top 0.3s ease-in-out; /* Smooth transition */
 }
 
-.video-list.active ~ .video-list {
+.video-grid.active ~ .video-grid {
   margin-top: 60px; /* Adjust this value based on the height of the search bar */
 }
 
-.video-card {
+.video-grid-card {
   width: 300px; /* Set a fixed width for cards */
   border-radius: 12px; /* Rounded corners */
   overflow: hidden; /* Ensure content stays within the card */
@@ -35,7 +35,7 @@ ion-toolbar {
   color: #ffffff; /* Default text color */
 }
 
-.video-card:hover {
+.video-grid-card:hover {
   transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
@@ -219,12 +219,12 @@ ion-button:hover {
   transition: all 0.3s ease-in-out; /* Smooth transition */
 }
 
-.video-list {
+.video-grid {
   margin-top: 0; /* Default margin */
   transition: margin-top 0.3s ease-in-out; /* Smooth transition */
 }
 
-.search-bar-container.active + .video-list {
+.search-bar-container.active + .video-grid {
   margin-top: 60px; /* Adjust this value based on the height of the search bar */
 }
 

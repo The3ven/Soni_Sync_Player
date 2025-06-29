@@ -3,6 +3,11 @@
     <ion-menu-button></ion-menu-button>
   </ion-buttons>
   <ion-title>Video Gallery</ion-title>
+  <ion-buttons slot="end">
+      <ion-button (click)="toggleLayout()">
+        <ion-icon [name]="layout === 'grid' ? 'grid' : 'list'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   <ion-buttons slot="end" [class.search-active]="isSearchAreaVisible">
     <!-- Favorite Icon -->
     <ion-button (click)="filterFavorites()" aria-label="Toggle favorites">
@@ -28,11 +33,11 @@
 
 <ion-content>
   <ng-container *ngIf="getList; else loading">
-    <div class="video-list">
+    <div [ngClass]="{'video-grid': layout === 'grid', 'video-list': layout === 'list'}">
       <ion-card
         *ngFor="let video of filteredVideos"
         (click)="navigateToPlayer(video)"
-        class="video-card"
+        [ngClass]="{'video-grid-card': layout === 'grid', 'video-list-card': layout === 'list'}"
         [ngStyle]="{ '--dynamic-color': video.themeColor || '#ffffff' }"
       >
         <!-- Favorite Icon -->

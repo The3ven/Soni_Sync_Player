@@ -14,6 +14,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^19.0.0",
+    "@angular/cdk": "^19.2.14",
     "@angular/common": "^19.0.0",
     "@angular/compiler": "^19.0.0",
     "@angular/core": "^19.0.0",
@@ -33,7 +34,9 @@
     "@capacitor/status-bar": "^7.0.0",
     "@ionic-native/android-exoplayer": "^5.36.0",
     "@ionic/angular": "^8.0.0",
+    "@types/dompurify": "^3.0.5",
     "axios": "^1.7.9",
+    "dompurify": "^3.2.6",
     "ionicons": "^7.0.0",
     "ng-socket-io": "^0.2.4",
     "ngx-plyr": "^4.0.1",
