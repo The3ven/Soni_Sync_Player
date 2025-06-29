@@ -18,6 +18,10 @@ import {
   IonCol,
   IonGrid,
   IonRow,
+  IonList,
+  IonLabel,
+  IonThumbnail,
+  IonItem,
 
 } from '@ionic/angular/standalone';
 import { NavController } from '@ionic/angular';
@@ -96,6 +100,10 @@ import { GlobalService } from 'src/app/services/global/global.service';
     IonButtons,
     IonButton,
     ScrollingModule,
+    IonList,
+    IonLabel,
+    IonThumbnail,
+    IonItem,
   ],
 })
 export class videoGalleryPage implements OnInit {

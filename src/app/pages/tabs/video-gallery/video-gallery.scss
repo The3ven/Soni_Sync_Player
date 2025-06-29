@@ -7,58 +7,138 @@ ion-header {
 }
 
 ion-toolbar {
-  --background: #1e1e1e; /* Dark background for the toolbar */
-  --color: #ffffff; /* White text color */
+  --background: #1e1e1e;
+  /* Dark background for the toolbar */
+  --color: #ffffff;
+  /* White text color */
 }
 
 .video-grid {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 16px; /* Add spacing between cards */
+  gap: 16px;
+  /* Add spacing between cards */
   padding: 16px;
-  margin-top: 0; /* Default margin */
-  transition: margin-top 0.3s ease-in-out; /* Smooth transition */
+  margin-top: 0;
+  /* Default margin */
+  transition: margin-top 0.3s ease-in-out;
+  /* Smooth transition */
 }
 
-.video-grid.active ~ .video-grid {
-  margin-top: 60px; /* Adjust this value based on the height of the search bar */
+.video-grid.active~.video-grid {
+  margin-top: 60px;
+  /* Adjust this value based on the height of the search bar */
 }
 
 .video-grid-card {
-  width: 300px; /* Set a fixed width for cards */
-  border-radius: 12px; /* Rounded corners */
-  overflow: hidden; /* Ensure content stays within the card */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-  transition: transform 0.2s ease-in-out; /* Smooth hover effect */
+  width: 300px;
+  /* Set a fixed width for cards */
+  border-radius: 12px;
+  /* Rounded corners */
+  overflow: hidden;
+  /* Ensure content stays within the card */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Subtle shadow */
+  transition: transform 0.2s ease-in-out;
+  /* Smooth hover effect */
   cursor: pointer;
-  color: #ffffff; /* Default text color */
+  color: #ffffff;
+  /* Default text color */
 }
 
 .video-grid-card:hover {
-  transform: scale(1.05); /* Slightly enlarge on hover */
+  transform: scale(1.05);
+  /* Slightly enlarge on hover */
+}
+
+.video-list-card {
+  // width: ; /* Set a fixed width for cards */
+  height: fit-content;
+  border-radius: 12px;
+  /* Rounded corners */
+  overflow: hidden;
+  /* Ensure content stays within the card */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Subtle shadow */
+  transition: transform 0.2s ease-in-out;
+  /* Smooth hover effect */
+  cursor: pointer;
+  color: #ffffff;
+  /* Default text color */
+}
+
+.video-details {
+  margin-left: 10px;
+}
+
+.video-title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.video-list {
+  background: #1e1e1e;
+}
+
+.video-duration {
+  font-size: 1em;
+  font-weight: lighter;
+}
+
+.video-item {
+  --background: none;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  padding: 10px;
+
+  ion-thumbnail {
+    border-radius: 8px;
+
+    img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+    }
+  }
+}
+
+
+.video-list-card:hover {
+  transform: scale(1.05);
+  /* Slightly enlarge on hover */
 }
 
 .video-thumbnail {
   width: 100%;
-  height: 180px; /* Fixed height for thumbnails */
-  object-fit: cover; /* Ensure the image covers the area */
+  height: 180px;
+  /* Fixed height for thumbnails */
+  object-fit: cover;
+  /* Ensure the image covers the area */
 }
 
 ion-card {
-  background-color: var(--dynamic-color, #ffffff) !important; /* Use dynamic color with fallback */
-  color: inherit !important; /* Ensure the text color is inherited */
-  background: rgba(255, 255, 255, 0.8); /* Semi-transparent card background */
+  background-color: var(--dynamic-color, #ffffff) !important;
+  /* Use dynamic color with fallback */
+  color: inherit !important;
+  /* Ensure the text color is inherited */
+  background: rgba(255, 255, 255, 0.8);
+  /* Semi-transparent card background */
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   margin-bottom: 16px;
 }
 
 ion-card-header {
-  background-color: transparent !important; /* Prevent overriding the dynamic background */
-  color: inherit !important; /* Ensure the text color matches the dynamic theme */
-  text-align: center; /* Center-align the text */
-  font-weight: bold; /* Make the title stand out */
+  background-color: transparent !important;
+  /* Prevent overriding the dynamic background */
+  color: inherit !important;
+  /* Ensure the text color matches the dynamic theme */
+  text-align: center;
+  /* Center-align the text */
+  font-weight: bold;
+  /* Make the title stand out */
   padding: 12px;
 }
 
@@ -73,9 +153,12 @@ ion-card-header {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Full viewport height */
-  background-color: #1e1e1e; /* Dark background for the loading screen */
-  color: #ffffff; /* White text color */
+  height: 100vh;
+  /* Full viewport height */
+  background-color: #1e1e1e;
+  /* Dark background for the loading screen */
+  color: #ffffff;
+  /* White text color */
   text-align: center;
 }
 
@@ -83,34 +166,45 @@ ion-card-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  animation: fadeIn 1s ease-in-out; /* Fade-in animation */
+  animation: fadeIn 1s ease-in-out;
+  /* Fade-in animation */
 }
 
 .loading-animation ion-spinner {
-  margin-bottom: 16px; /* Add spacing below the spinner */
-  --color: #ffffff; /* White spinner */
-  animation: spin 1.5s linear infinite; /* Smooth spinning animation */
+  margin-bottom: 16px;
+  /* Add spacing below the spinner */
+  --color: #ffffff;
+  /* White spinner */
+  animation: spin 1.5s linear infinite;
+  /* Smooth spinning animation */
 }
 
 .loading-animation p {
   font-size: 18px;
   font-weight: bold;
-  animation: pulse 1.5s infinite; /* Pulsing text animation */
+  animation: pulse 1.5s infinite;
+  /* Pulsing text animation */
 }
 
 ion-text {
-  all: unset; /* Reset all styles applied by ion-text */
-  display: block; /* Ensure it behaves like a block element */
-  color: inherit; /* Inherit color from the parent */
-  font-size: inherit; /* Inherit font size from the parent */
-  text-align: inherit; /* Inherit text alignment */
+  all: unset;
+  /* Reset all styles applied by ion-text */
+  display: block;
+  /* Ensure it behaves like a block element */
+  color: inherit;
+  /* Inherit color from the parent */
+  font-size: inherit;
+  /* Inherit font size from the parent */
+  text-align: inherit;
+  /* Inherit text alignment */
 }
 
 .video-duration {
   display: block;
   margin-top: 8px;
   font-size: 14px;
-  color: #ffffff !important; /* Explicitly set the color for video duration */
+  color: #ffffff !important;
+  /* Explicitly set the color for video duration */
 }
 
 .card-loading {
@@ -122,22 +216,29 @@ ion-text {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  z-index: 1; /* Ensure it appears above the card content */
-  border-radius: 12px; /* Match the card's border radius */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Semi-transparent background */
+  z-index: 1;
+  /* Ensure it appears above the card content */
+  border-radius: 12px;
+  /* Match the card's border radius */
   opacity: 1;
-  animation: fadeIn 0.5s ease-in-out; /* Smooth fade-in animation */
+  animation: fadeIn 0.5s ease-in-out;
+  /* Smooth fade-in animation */
 }
 
 .card-loading.hidden {
-  animation: fadeOut 0.5s ease-in-out; /* Smooth fade-out animation */
+  animation: fadeOut 0.5s ease-in-out;
+  /* Smooth fade-out animation */
   opacity: 0;
-  pointer-events: none; /* Prevent interaction when hidden */
+  pointer-events: none;
+  /* Prevent interaction when hidden */
 }
 
 .card-content {
   opacity: 1;
-  transition: opacity 0.5s ease-in-out; /* Smooth transition for content */
+  transition: opacity 0.5s ease-in-out;
+  /* Smooth transition for content */
 }
 
 /* Keyframes for fade-in effect */
@@ -145,6 +246,7 @@ ion-text {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -155,6 +257,7 @@ ion-text {
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
@@ -165,6 +268,7 @@ ion-text {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -172,36 +276,48 @@ ion-text {
 
 /* Keyframes for pulsing text */
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
 }
 
 .search-bar-container {
-  display: none; /* Initially hidden */
-  position: fixed; /* Fix it to the top of the viewport */
-  top: 56px; /* Adjust based on the toolbar height */
+  display: none;
+  /* Initially hidden */
+  position: fixed;
+  /* Fix it to the top of the viewport */
+  top: 56px;
+  /* Adjust based on the toolbar height */
   left: 0;
   right: 0;
   margin: 0 auto;
-  width: 80%; /* Set a proper width */
-  z-index: 1000; /* Ensure it appears above all other elements */
-  transition: all 0.3s ease-in-out; /* Smooth transition for visibility */
+  width: 80%;
+  /* Set a proper width */
+  z-index: 1000;
+  /* Ensure it appears above all other elements */
+  transition: all 0.3s ease-in-out;
+  /* Smooth transition for visibility */
 }
 
 .search-bar-container.active {
-  display: block; /* Show the search bar when active */
+  display: block;
+  /* Show the search bar when active */
 }
 
 ion-searchbar {
   width: 100%;
-  background: #1e1e1e; /* Match the theme */
+  background: #1e1e1e;
+  /* Match the theme */
   color: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for better visibility */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Add a shadow for better visibility */
 }
 
 ion-button {
@@ -214,18 +330,24 @@ ion-button:hover {
 }
 
 .search-bar-container {
-  position: relative; /* Ensure it doesn't overlap */
-  z-index: 10; /* Keep it above the video list */
-  transition: all 0.3s ease-in-out; /* Smooth transition */
+  position: relative;
+  /* Ensure it doesn't overlap */
+  z-index: 10;
+  /* Keep it above the video list */
+  transition: all 0.3s ease-in-out;
+  /* Smooth transition */
 }
 
 .video-grid {
-  margin-top: 0; /* Default margin */
-  transition: margin-top 0.3s ease-in-out; /* Smooth transition */
+  margin-top: 0;
+  /* Default margin */
+  transition: margin-top 0.3s ease-in-out;
+  /* Smooth transition */
 }
 
-.search-bar-container.active + .video-grid {
-  margin-top: 60px; /* Adjust this value based on the height of the search bar */
+.search-bar-container.active+.video-grid {
+  margin-top: 60px;
+  /* Adjust this value based on the height of the search bar */
 }
 
 .favorite-icon {
@@ -233,24 +355,31 @@ ion-button:hover {
   top: 8px;
   right: 8px;
   z-index: 10;
-  padding: 0; /* Remove padding */
+  padding: 0;
+  /* Remove padding */
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
-  background: none; /* Remove background */
-  border: none; /* Remove border */
+  background: none;
+  /* Remove background */
+  border: none;
+  /* Remove border */
 }
 
 .favorite-icon ion-icon {
-  font-size: 24px; /* Adjust size if needed */
-  color: #ff4d4d; /* Keep the heart color */
+  font-size: 24px;
+  /* Adjust size if needed */
+  color: #ff4d4d;
+  /* Keep the heart color */
 }
 
 .favorite-icon:hover {
-  transform: scale(1.2); /* Slightly enlarge on hover */
+  transform: scale(1.2);
+  /* Slightly enlarge on hover */
 }
 
 ion-content {
-  --background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+  // --background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+  --background: #1e1e1e;
   background-size: 400% 400%;
   animation: gradientAnimation 15s ease infinite;
 }
@@ -263,7 +392,8 @@ ion-buttons {
 }
 
 ion-buttons.search-active {
-  margin-right: 260px; /* Push buttons to the left when search is active */
+  margin-right: 260px;
+  /* Push buttons to the left when search is active */
 }
 
 /* Search Input */
@@ -286,11 +416,12 @@ ion-buttons.search-active {
 }
 
 ::ng-deep ion-searchbar .searchbar-input {
-  padding-inline-start: 0 !important; /* Remove left padding */
+  padding-inline-start: 0 !important;
+  /* Remove left padding */
 }
 
 ::ng-deep ion-searchbar .searchbar-input.sc-ion-searchbar-md {
-  box-shadow:none;
+  box-shadow: none;
   // font-family:inherit;
   // font-size:inherit;
   // font-style:inherit;
@@ -321,15 +452,20 @@ ion-buttons.search-active {
 
 .search-input.active {
   opacity: 1;
-  width: 250px; /* Adjust width as needed */
+  width: 250px;
+  /* Adjust width as needed */
 
 }
 
 .search-input ion-searchbar {
-  --background: transparent; /* Remove background color */
-  --color: #ffffff; /* Optional: Set text color */
-  border: none; /* Remove any border */
-  box-shadow: none; /* Remove shadow if present */
+  --background: transparent;
+  /* Remove background color */
+  --color: #ffffff;
+  /* Optional: Set text color */
+  border: none;
+  /* Remove any border */
+  box-shadow: none;
+  /* Remove shadow if present */
 }
 
 /* Fade-in Animation */
@@ -337,6 +473,7 @@ ion-buttons.search-active {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -346,9 +483,11 @@ ion-buttons.search-active {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
